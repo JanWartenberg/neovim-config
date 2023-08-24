@@ -2,35 +2,20 @@
 -- resp. "user commands", i.e.  something to type in à la 
 -- :MyCommand
 
-
--- https://vim.fandom.com/wiki/Replace_a_builtin_command_using_cabbrev
--- Vim Script -> converted to lua script
--- function! CommandCabbr(abbreviation, expansion)
---   execute 'cabbr ' . a:abbreviation . ' <c-r>=getcmdpos() == 1 && getcmdtype() == ":" ? "' . a:expansion . '" : "' . a:abbreviation . '"<CR>'
--- endfunction
--- command! -nargs=+ CommandCabbr call CommandCabbr(<f-args>)
--- CommandCabbr ccab CommandCabbr
+--- Make an abbreviation for a command - even lowercase command possible
+--- Take care not to remap core commands, of course.
+--- This is a lua rewrite of
+---     https://vim.fandom.com/wiki/Replace_a_builtin_command_using_cabbrev
 CommandCabbr = function (abbreviation, expansion)
-    -- hack for now.. if called as a vim command, args are squished into
-    --  abbreviation.args as a string
-    --  (for sure there is a better way to expand the args at nvim_create_user_command time,
-    --  however I do not know it and this workaround seems to work..)
-    if (type(abbreviation) == "table") then
-        local args = {}
-        for arg in abbreviation.args:gmatch("%w+") do table.insert(args, arg) end
-        expansion = args[2]
-        abbreviation = args[1]
-    end
---     print("cabbr " .. abbreviation ..
---         " <c-r>=getcmdpos() == 1 && getcmdtype() == ':' ? '" .. expansion ..
---         "' : '" .. abbreviation .. "'<CR>")
     vim.cmd("cabbr " .. abbreviation ..
         " <c-r>=getcmdpos() == 1 && getcmdtype() == ':' ? '" .. expansion ..
         "' : '" .. abbreviation .. "'<CR>")
 end
-vim.api.nvim_create_user_command('CommandCabbr', CommandCabbr,
-    { nargs = '*' })
-    -- " Use it on itself to define a simpler abbreviation for itself.
+vim.api.nvim_create_user_command('CommandCabbr', function (opts)
+    local args = opts.fargs
+    CommandCabbr(args[1], args[2])
+end, { nargs = '*' })
+-- Use it on itself to define a simpler abbreviation for itself.
 vim.cmd("CommandCabbr ccab CommandCabbr")
 
 
