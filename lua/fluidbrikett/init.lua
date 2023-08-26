@@ -34,12 +34,8 @@ vim.opt.updatetime = 50
 -- auto change dir in net rw
 vim.opt.autochdir = true
 
-
---vim.o.shell = vim.fn.executable('pwsh') -- use powershell
--- tried to set the shell, that external commands can be executed
--- this SHIT is NOT WORKING
---vim.cmd([[set shell=\"C:\Program\ Files\Git\bin\bash.exe\"]])
---vim.opt.shellcmdflag = "-c"
+-- fix that floaterm opens new instances at toggle
+vim.opt.hidden = true
 
 -- Sets the shell to use for system() and ! commands  (use powershell)
 vim.opt.shell = 'pwsh.exe'
