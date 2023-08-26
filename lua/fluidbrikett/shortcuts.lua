@@ -51,4 +51,5 @@ vim.api.nvim_create_user_command('Wso', function ()
    vim.cmd("so")
 end, {})
 vim.cmd("CommandCabbr wso Wso")
+vim.cmd("CommandCabbr dbc DropboxCode")
 
