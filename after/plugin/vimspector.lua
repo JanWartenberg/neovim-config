@@ -6,6 +6,7 @@ vim.g.vimspector_terminal_maxwidth = 70
 -- Vimspector
 -- Reset also ends the debug session and closes the Vimspector windows
 -- PyCharm: F5: StepOver F6: StepInto F7: StepOut, Ctrl-F2: Stop Run/Debug
+-- might only work if source file opened and breakpoint is set
 vim.keymap.set('n', "<F9>", ":call vimspector#Launch()<cr>")
 vim.keymap.set('n', "<F5>", ":call vimspector#StepOver()<cr>")
 vim.keymap.set('n', "<F6>", ":call vimspector#StepInto()<cr>")
