@@ -46,6 +46,8 @@ vim.keymap.set("n", "<leader>mr", "<cmd>CellularAutomaton make_it_rain<CR>");
 
 
 -- FloaTerm configuration
-vim.keymap.set('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=0 <CR> ")
-vim.keymap.set('n', "t", ":FloatermToggle myfloat<CR>")
+vim.keymap.set('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=0 <CR>")
+vim.keymap.set('n', "<leader>fn", ":FloatermNext <CR>")
+vim.keymap.set('t', "<leader>fn", "<C-\\><C-n>:FloatermNext <CR>")
+vim.keymap.set('n', "t", ":FloatermToggle myfloat <CR>")
 vim.keymap.set('t', "<Esc>", "<C-\\><C-n>:q<CR>")
