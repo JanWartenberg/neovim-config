@@ -6,7 +6,8 @@ require("fluidbrikett.shortcuts")
 print("hello from the nested lua")
 
 -- path to python (python env including pynim)
-vim.g.python3_host_prog = 'C:/Users/janwa/AppData/Local/Programs/Venv/pynvim/Scripts/python.exe'
+-- vim.g.python3_host_prog = 'C:/Users/janwa/AppData/Local/Programs/Venv/pynvim/Scripts/python.exe'
+vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
 
 -- tabs
 vim.opt.expandtab = true -- insert spaces on tab
@@ -20,7 +21,8 @@ vim.opt.relativenumber = true
 
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = "C:\\Users\\janwa\\AppData\\Local\\nvim\\undodir"
+--vim.opt.undodir = "C:\\Users\\janwa\\AppData\\Local\\nvim\\undodir"
+vim.opt.undodir = vim.g.homedir .. "\\AppData\\Local\\nvim\\undodir"
 vim.opt.undofile = true
 
 vim.opt.incsearch = true
