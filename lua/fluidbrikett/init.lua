@@ -8,11 +8,16 @@ print("hello from the nested lua")
 -- path to python (python env including pynim)
 vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
 
+vim.opt.encoding="utf-8"
+
 -- tabs
 vim.opt.expandtab = true -- insert spaces on tab
 vim.opt.tabstop = 4      -- existing tab: show 4 spaces
 vim.opt.softtabstop = 4  -- how many spaces the cursor moves
 vim.opt.shiftwidth = 4   -- when indenting with '>', use 4 spaces
+-- show tabs as greyed out ">~"
+vim.opt.listchars =  { tab = '>~' }
+vim.opt.list = true
 
 -- line numbers
 vim.opt.nu = true
@@ -45,8 +50,8 @@ vim.opt.shellquote = ''
 
 
 -- at startup: split window
-vim.cmd("vs")
-vim.cmd("wincmd l") -- jump to other window
+-- vim.cmd("vs")
+-- vim.cmd("wincmd l") -- jump to other window
 vim.cmd("Dropbox")  -- open Dropbox in it
-vim.cmd("wincmd h")
+-- vim.cmd("wincmd h")
 
