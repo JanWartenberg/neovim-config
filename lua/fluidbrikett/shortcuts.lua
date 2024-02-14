@@ -2,6 +2,8 @@
 -- resp. "user commands", i.e.  something to type in à la 
 -- :MyCommand
 
+vim.g.homedir = 'C:\\Users\\janwa'
+
 --- Make an abbreviation for a command - even lowercase command possible
 --- Take care not to remap core commands, of course.
 --- This is a lua rewrite of
@@ -18,11 +20,10 @@ end, { nargs = '*' })
 -- Use it on itself to define a simpler abbreviation for itself.
 vim.cmd("CommandCabbr ccab CommandCabbr")
 
-
-vim.g.Dropbox = "C:\\Users\\janwa\\Dropbox"
-vim.g.DropboxCode = "C:\\Users\\janwa\\Dropbox\\wichtiges\\Code"
-vim.g.DropboxGitarre = "C:\\Users\\janwa\\Dropbox\\wichtiges\\Gitarre\\Tabs"
-vim.g.Nvimconfig = "C:\\Users\\janwa\\Appdata\\Local\\nvim"
+vim.g.Dropbox = vim.g.homedir .. "\\Dropbox"
+vim.g.DropboxCode = vim.g.homedir .. "\\Dropbox\\wichtiges\\Code"
+vim.g.DropboxGitarre = vim.g.homedir .. "\\Dropbox\\wichtiges\\Gitarre\\Tabs"
+vim.g.Nvimconfig = vim.g.homedir .. "\\Appdata\\Local\\nvim"
 
 vim.api.nvim_create_user_command('Dropbox', function()
     vim.fn.chdir(vim.g.Dropbox)

@@ -1,5 +1,6 @@
 require("mason").setup {
-    log_level = vim.log.levels.DEBUG
+    log_level = vim.log.levels.DEBUG,
+    PATH = "prepend",
 }
 require('lspconfig')
 
