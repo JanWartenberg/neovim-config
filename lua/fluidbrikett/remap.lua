@@ -26,6 +26,8 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
 -- This is going to get me cancelled
 vim.keymap.set("i", "<C-c>", "<Esc>")
+-- commonly used remap to go from insert to normal.. have to try it
+vim.keymap.set("i", "jk", "<Esc>")
 
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
@@ -50,3 +52,6 @@ vim.keymap.set('n', "<leader>fn", ":FloatermNext <CR>")
 vim.keymap.set('t', "<leader>fn", "<C-\\><C-n>:FloatermNext <CR>")
 vim.keymap.set('n', "t", ":FloatermToggle myfloat <CR>")
 vim.keymap.set('t', "<Esc>", "<C-\\><C-n>:q<CR>")
+
+vim.keymap.set('n', "<leader>lf", "<C-^>")
+vim.keymap.set('n', "<leader>lb", "<cmd>e #<CR>")

@@ -36,6 +36,10 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 
+vim.opt.timeoutlen = 500
+
+vim.opt.guicursor = "n-v-sm:block,i-c-ci-cr-ve:ver20,r-o:hor50"
+
 -- auto change dir in net rw
 vim.opt.autochdir = true
 
@@ -43,15 +47,16 @@ vim.opt.autochdir = true
 vim.opt.hidden = true
 
 -- Sets the shell to use for system() and ! commands  (use powershell)
-vim.opt.shell = 'pwsh.exe'
+vim.opt.shell = 'powershell.exe'
 vim.opt.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command '
+-- vim.opt.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned '
+-- vim.opt.shellcmdflag = '-NoLogo -NoProfile '
 vim.opt.shellxquote = ''
 vim.opt.shellquote = ''
+vim.o.shellpipe = '| Out-File -Encoding UTF8 %s'
+vim.o.shellredir = '| Out-File -Encoding UTF8 %s'
 
 
--- at startup: split window
--- vim.cmd("vs")
--- vim.cmd("wincmd l") -- jump to other window
-vim.cmd("Dropbox")  -- open Dropbox in it
--- vim.cmd("wincmd h")
+-- at startup: open src in it
+vim.cmd("Source")  -- vim.cmd("wincmd h")
 
