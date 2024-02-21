@@ -58,6 +58,6 @@ vim.o.shellpipe = '| Out-File -Encoding UTF8 %s'
 vim.o.shellredir = '| Out-File -Encoding UTF8 %s'
 
 
--- at startup: open src in it
-vim.cmd("Source")  -- vim.cmd("wincmd h")
+-- at startup: open Dropbox
+vim.cmd("Dropbox")  -- vim.cmd("wincmd h")
 
