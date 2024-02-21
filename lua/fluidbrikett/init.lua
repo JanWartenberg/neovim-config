@@ -17,21 +17,22 @@ vim.opt.softtabstop = 4  -- how many spaces the cursor moves
 vim.opt.shiftwidth = 4   -- when indenting with '>', use 4 spaces
 -- show tabs as greyed out ">~"
 vim.opt.listchars =  { tab = '>~' }
-vim.opt.list = true
+vim.opt.list = true     -- this is magically needed to make listchars work
 
 -- line numbers
-vim.opt.nu = true
-vim.opt.relativenumber = true
+vim.opt.relativenumber = true   -- relative line numbers
+vim.opt.nu = true               -- still show absolute line number for the current one
 
+-- rely on undo files and plugin "undotree", not on swap files
 vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = vim.g.homedir .. "\\AppData\\Local\\nvim\\undodir"
 vim.opt.undofile = true
 
-vim.opt.incsearch = true
+vim.opt.incsearch = true        --enable incremental search
 
 vim.opt.scrolloff = 8
-vim.opt.signcolumn = "yes"
+vim.opt.signcolumn = "yes"      --sign column: dedicated area on the left side of the editor 
 vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
