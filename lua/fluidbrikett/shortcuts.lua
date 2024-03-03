@@ -46,6 +46,19 @@ vim.api.nvim_create_user_command('Nvconf', function()
 end, {})
 vim.cmd("CommandCabbr nvc Nvconf")
 
+-- create search for "Headers"
+-- i.e. if I use custom text notes with "====" as headers
+-- will add those heading texts into the quickfix list
+vim.api.nvim_create_user_command('Headersearch',
+    function()
+    vim.cmd([[vimgrep /\(^.*$\)\n=\{4}/g %]])
+    end,
+    {}
+)
+-- in custom text notes "* " on begin of line is like a list item
+vim.api.nvim_create_user_command('Listentrysearch',
+"vimgrep /^\\* \\(.*\\)$/g %", {})
+
 -- make wso to write file AND shoutout (execute script) directly
 vim.api.nvim_create_user_command('Wso', function ()
    vim.cmd("w")
