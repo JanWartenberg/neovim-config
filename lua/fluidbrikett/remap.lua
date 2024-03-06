@@ -18,8 +18,9 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 --if text is pasted over selected text, keep the pasted text in the buffer
-vim.keymap.set("x", "<leader>p", "\"_dP")
-
+vim.keymap.set("x", "<leader>p", [["_dP]])
+-- system clipboard for convenience
+vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
