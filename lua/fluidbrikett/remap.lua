@@ -30,9 +30,14 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 -- commonly used remap to go from insert to normal.. have to try it
 vim.keymap.set("i", "jk", "<Esc>")
 
+-- remap this, which is short for :q! per default
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
+-- Show LSP diagnostic (i.e. Warning/Errors) in floating window 
+-- (in case message is cropped in small window)
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+-- Show LSP hover, which should show the docstring of an element
+vim.keymap.set("n", "<leader>ee", vim.lsp.buf.hover)
 
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
@@ -42,7 +47,8 @@ vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
 -- Space s: replace all findings of the word under the cursor
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- replace all findings, after having selected in visual line mode
-vim.keymap.set("v", "<leader>s", [[:<del><del><del><del><del>%s/\%V\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+-- not sure if to keep this..
+vim.keymap.set("v", "<leader>r", [[:<del><del><del><del><del>%s/\%V\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- Space s in Visual mode: search/replace only within selection
 vim.keymap.set("v", "<leader>s", [[:s/\%V<C-r><C-w>\%V/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
