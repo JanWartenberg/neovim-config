@@ -5,7 +5,7 @@ vim.keymap.set("n", "<leader>ss", "<C-w>v<C-w>w100j")
 
 -- jumpt to netrw
 vim.keymap.set("n", "<leader>ff", vim.cmd.Ex)
-vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
+vim.keymap.set("n", "-", vim.cmd.Ex)
 
 -- Selected lines can be moved with Shift+J / Shift+K
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
