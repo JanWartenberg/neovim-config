@@ -44,6 +44,12 @@ vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
 vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
 
+-- more ease on navigation on German Keyboard
+vim.keymap.set("n", "ö", "{")
+vim.keymap.set("n", "ä", "}")
+vim.keymap.set("n", "Ö", "[")
+vim.keymap.set("n", "Ä", "]")
+
 -- Space s: replace all findings of the word under the cursor
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- replace all findings, after having selected in visual line mode
