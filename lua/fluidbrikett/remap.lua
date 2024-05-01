@@ -24,6 +24,9 @@ vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set("n", "<leader>Y", [["+Y]])
 vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+-- y$  yank till end of line (without linebreak)
+-- "+y$  yank to system clip till end of line
+vim.keymap.set({ "n" }, "<leader>c", [["+y$]])
 
 -- This is going to get me cancelled
 vim.keymap.set("i", "<C-c>", "<Esc>")
