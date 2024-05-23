@@ -28,6 +28,9 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 -- "+y$  yank to system clip till end of line
 vim.keymap.set({ "n" }, "<leader>c", [["+y$]])
 
+-- yank+replace current word
+vim.keymap.set({ "n" }, "<leader>r", [[viw"0p]])
+
 -- This is going to get me cancelled
 vim.keymap.set("i", "<C-c>", "<Esc>")
 -- commonly used remap to go from insert to normal.. have to try it
@@ -48,10 +51,10 @@ vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
 
 -- more ease on navigation on German Keyboard
-vim.keymap.set("n", "ö", "{")
-vim.keymap.set("n", "ä", "}")
-vim.keymap.set("n", "Ö", "[")
-vim.keymap.set("n", "Ä", "]")
+vim.keymap.set({ "n", "v" }, "ö", "{")
+vim.keymap.set({ "n", "v" }, "ä", "}")
+vim.keymap.set({ "n", "v" }, "Ö", "[")
+vim.keymap.set({ "n", "v" }, "Ä", "]")
 
 -- Space s: replace all findings of the word under the cursor
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
