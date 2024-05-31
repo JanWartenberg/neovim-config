@@ -44,6 +44,7 @@ vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 -- Show LSP hover, which should show the docstring of an element
 vim.keymap.set("n", "<leader>ee", vim.lsp.buf.hover)
+vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")

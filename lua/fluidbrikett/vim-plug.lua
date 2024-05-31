@@ -30,9 +30,15 @@ Plug('puremourning/vimspector')
 
 Plug('voldikss/vim-floaterm')
 
+-- show structure of a file?
+Plug('stevearc/aerial.nvim')
+
+
 -- ayu colorscheme
 Plug('Shatur/neovim-ayu')
 
 Plug('ThePrimeagen/vim-be-good')
---Plug('ThePrimeagen/harpoon')
+
+
+
 vim.call('plug#end')
