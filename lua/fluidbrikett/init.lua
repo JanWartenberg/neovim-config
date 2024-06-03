@@ -29,6 +29,18 @@ vim.opt.backup = false
 vim.opt.undodir = vim.g.homedir .. "\\AppData\\Local\\nvim\\undodir"
 vim.opt.undofile = true
 
+-- set shada     see :help 'shada'
+-- Maximum number of previously edited files for which the marks are remembered
+-- could be, that default is already set, however then the newer value "wins"
+-- vim.opt.shada:append( "'300" )
+-- alternative:  vim.opt.shada = "!,'300,<50,s10,h"
+vim.opt.shada = "!,'400,<400,s200,h"
+-- !        save and restore global variables that start with an uppercase letter
+-- '300     for a maximum of 300 files marks are stored (incl. jumplist/changelist)
+-- <300     Maximum number of lines saved for each register
+-- s100     Maximum size of an item contents in KiB.
+-- h        Disable the effect of 'hlsearch' when loading the shada file.
+
 vim.opt.incsearch = true        --enable incremental search
 
 vim.opt.scrolloff = 8
