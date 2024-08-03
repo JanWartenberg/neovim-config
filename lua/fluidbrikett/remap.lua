@@ -45,6 +45,9 @@ vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 -- Show LSP hover, which should show the docstring of an element
 vim.keymap.set("n", "<leader>ee", vim.lsp.buf.hover)
 vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
+-- jump to next lsp error
+vim.keymap.set("n", "<leader>ä", vim.diagnostic.goto_next)
+vim.keymap.set("n", "<leader>ö", vim.diagnostic.goto_prev)
 
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
@@ -57,12 +60,11 @@ vim.keymap.set({ "n", "v" }, "ä", "}")
 vim.keymap.set({ "n", "v" }, "Ö", "[")
 vim.keymap.set({ "n", "v" }, "Ä", "]")
 
+
 -- Space s: replace all findings of the word under the cursor
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
--- replace all findings, after having selected in visual line mode
--- not sure if to keep this..
-vim.keymap.set("v", "<leader>r", [[:<del><del><del><del><del>%s/\%V\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 -- Space s in Visual mode: search/replace only within selection
+-- replace all findings, after having selected in visual line mode
 vim.keymap.set("v", "<leader>s", [[:s/\%V<C-r><C-w>\%V/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
