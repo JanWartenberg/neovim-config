@@ -33,7 +33,7 @@ vim.keymap.set({ "n" }, "<leader>r", [[viw"0p]])
 
 -- This is going to get me cancelled
 vim.keymap.set("i", "<C-c>", "<Esc>")
--- commonly used remap to go from insert to normal.. have to try it
+-- commonly used remap to go from insert to normal..
 vim.keymap.set("i", "jk", "<Esc>")
 
 -- remap this, which is short for :q! per default
@@ -60,6 +60,8 @@ vim.keymap.set({ "n", "v" }, "ä", "}")
 vim.keymap.set({ "n", "v" }, "Ö", "[")
 vim.keymap.set({ "n", "v" }, "Ä", "]")
 
+-- for some reason Ctrl-V is now broken.. (Windows 11??)
+vim.keymap.set("n", "<C-b>", "<C-v>")
 
 -- Space s: replace all findings of the word under the cursor
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
@@ -79,3 +81,6 @@ vim.keymap.set('t', "<Esc>", "<C-\\><C-n>:q<CR>")
 
 vim.keymap.set('n', "<leader>lf", "<C-^>")
 vim.keymap.set('n', "<leader>lb", "<cmd>e #<CR>")
+
+
+vim.keymap.set("x", "<C-v>", "<nop>")

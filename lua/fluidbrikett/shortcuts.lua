@@ -46,18 +46,35 @@ vim.api.nvim_create_user_command('Nvconf', function()
 end, {})
 vim.cmd("CommandCabbr nvc Nvconf")
 
+
+local function vim_grep_error_handled (grep_string)
+    vim.notify("vimgrep "..grep_string)
+    if pcall(function () vim.cmd("vimgrep "..grep_string) end)
+    then
+    else
+        vim.notify("No matches found.", vim.log.levels.INFO)
+    end
+end
+
 -- create search for "Headers"
 -- i.e. if I use custom text notes with "====" as headers
 -- will add those heading texts into the quickfix list
+-- /\(^.*$\)\n=\{4}/g %
 vim.api.nvim_create_user_command('Headersearch',
-    function()
-    vim.cmd([[vimgrep /\(^.*$\)\n=\{4}/g %]])
-    end,
+    function () vim_grep_error_handled([[/\(^.*$\)\n=\{4}/g %]]) end,
     {}
 )
 -- in custom text notes "* " on begin of line is like a list item
 vim.api.nvim_create_user_command('Listentrysearch',
-"vimgrep /^\\* \\(.*\\)$/g %", {})
+    function () vim_grep_error_handled([[vimgrep /^\\* \\(.*\\)$/g %]]) end,
+    {}
+)
+
+function OpenExplorer()
+  local current_dir = vim.fn.expand('%:p:h')
+  vim.fn.system('explorer.exe "' .. current_dir .. '"')
+end
+vim.api.nvim_create_user_command('Exp', OpenExplorer, {})
 
 -- make wso to write file AND shoutout (execute script) directly
 vim.api.nvim_create_user_command('Wso', function ()
