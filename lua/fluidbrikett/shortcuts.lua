@@ -74,7 +74,7 @@ function OpenExplorer()
   local current_dir = vim.fn.expand('%:p:h')
   vim.fn.system('explorer.exe "' .. current_dir .. '"')
 end
-vim.api.nvim_create_user_command('Exp', OpenExplorer, {})
+vim.api.nvim_create_user_command('WinExplorer', OpenExplorer, {})
 
 -- make wso to write file AND shoutout (execute script) directly
 vim.api.nvim_create_user_command('Wso', function ()
@@ -83,4 +83,3 @@ vim.api.nvim_create_user_command('Wso', function ()
 end, {})
 vim.cmd("CommandCabbr wso Wso")
 vim.cmd("CommandCabbr dbc DropboxCode")
-
