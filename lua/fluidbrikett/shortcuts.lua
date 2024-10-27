@@ -66,7 +66,7 @@ vim.api.nvim_create_user_command('Headersearch',
 )
 -- in custom text notes "* " on begin of line is like a list item
 vim.api.nvim_create_user_command('Listentrysearch',
-    function () vim_grep_error_handled([[vimgrep /^\\* \\(.*\\)$/g %]]) end,
+    function () vim_grep_error_handled([[/^\* \(.*\)$/g %]]) end,
     {}
 )
 

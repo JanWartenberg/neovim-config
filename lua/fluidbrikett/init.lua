@@ -7,6 +7,7 @@ print("hello from the nested lua")
 
 -- path to python (python env including pynim)
 vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
+-- vim.g.python3_host_prog = 'D:\\Docs\\Code\\venv\\Scripts\\python.exe'
 
 vim.opt.encoding="utf-8"
 
@@ -70,6 +71,42 @@ vim.o.shellpipe = '| Out-File -Encoding UTF8 %s'
 vim.o.shellredir = '| Out-File -Encoding UTF8 %s'
 
 
--- at startup: open Dropbox
-vim.cmd("Dropbox")  -- vim.cmd("wincmd h")
+-- -------------------
+-- This might be a stupid hack,
+-- but if I want to open the netrw in Dropbox folder per default I override the possibility
+-- to open a specific text file passed in via cmd line.
+-- -------------
+-- Check if something is a file
+local function is_file(filename)
+  local file = io.open(filename, "r")
+  print("file: " .. filename)
 
+  if file then
+    file:close()
+    return true
+  else
+    return false
+  end
+end
+
+
+local open_filename = false
+-- parse neovim's argv
+for k, v in pairs(vim.v.argv) do
+    if k == 3 then
+        if is_file(v) then
+            print("trying to open " .. v)
+            vim.cmd("e " .. v)
+            open_filename = true
+        else
+        end
+    end
+end
+
+-- at startup: open Dropbox
+-- if we did not pass in a file name
+if not open_filename then
+    vim.cmd("Dropbox")  -- vim.cmd("wincmd h")
+end
+-- end of stupid hack
+-- -----------------------
