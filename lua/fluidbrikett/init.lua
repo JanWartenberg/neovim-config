@@ -3,8 +3,6 @@ require("fluidbrikett.remap")
 require("fluidbrikett.vim-plug")
 require("fluidbrikett.shortcuts")
 
-print("hello from the nested lua")
-
 -- path to python (python env including pynim)
 vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
 -- vim.g.python3_host_prog = 'D:\\Docs\\Code\\venv\\Scripts\\python.exe'
