@@ -61,7 +61,10 @@ vim.keymap.set({ "n", "v" }, "Ö", "[")
 vim.keymap.set({ "n", "v" }, "Ä", "]")
 
 -- for some reason Ctrl-V is now broken.. (Windows 11??)
+-- allow Block editing:
 vim.keymap.set("n", "<C-b>", "<C-v>")
+-- allow inserting explicit chars, like <Tab>
+vim.keymap.set("i", "<C-b>", "<C-v>")
 
 -- Space s: replace all findings of the word under the cursor
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
