@@ -2,6 +2,7 @@
 require("fluidbrikett.remap")
 require("fluidbrikett.vim-plug")
 require("fluidbrikett.shortcuts")
+require("fluidbrikett.load_present")
 
 -- path to python (python env including pynim)
 vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
