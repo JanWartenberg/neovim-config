@@ -9,6 +9,46 @@ M.setup = function()
     -- part for user configuration
 end
 
+local create_window_configurations = function ()
+
+    local width = vim.o.columns
+    local height = vim.o.lines
+    return {
+        -- one window config for whole wrapping window
+        background = {
+            relative = "editor",
+            width = width,
+            height = height,
+            --style = "minimal",
+            col = 0,
+            row = 0,
+            zindex = 1,
+        },
+        -- windows configuration for the header only
+        header = {
+            relative = "editor",
+            width = width,
+            height = 1,
+            style = "minimal",
+            border = "rounded",
+            col = 0,
+            row = 0,
+            zindex = 2,
+        },
+        -- windows configuration for the body only
+        body = {
+            relative = "editor",
+            width = width - 8,
+            height = height - 5,
+            style = "minimal", -- No borders or extra UI elements
+            border = { "#", "#", "#", "#", "#", "#", "#", "#" },
+            --border = { " ", " ", " ", " ", " ", " ", " ", " " },
+            col = 8,
+            row = 4,
+        }
+        -- footer = {},
+    }
+end
 
 local function create_floating_window(config)
     -- Create a buffer
@@ -73,45 +113,10 @@ M.start_presentation = function(opts)
 
     local lines = vim.api.nvim_buf_get_lines(opts.bufnr, 0, -1, false)
     local parsed = parse_slides(lines)
-
+    local current_slide = 1
     local width = vim.o.columns
-    local height = vim.o.lines
-    ---@type vim.api.keyset.win_config
-    local windows = {
-        -- one window config for whole wrapping window
-        background = {
-            relative = "editor",
-            width = width,
-            height = height,
-            --style = "minimal",
-            col = 0,
-            row = 0,
-            zindex = 1,
-        },
-        -- windows configuration for the header only
-        header = {
-            relative = "editor",
-            width = width,
-            height = 1,
-            style = "minimal",
-            border = "rounded",
-            col = 0,
-            row = 0,
-            zindex = 2,
-        },
-        -- windows configuration for the body only
-        body = {
-            relative = "editor",
-            width = width - 8,
-            height = height - 5,
-            style = "minimal", -- No borders or extra UI elements
-            border = { "#", "#", "#", "#", "#", "#", "#", "#" },
-            --border = { " ", " ", " ", " ", " ", " ", " ", " " },
-            col = 8,
-            row = 4,
-        }
-        -- footer = {},
-    }
+
+    local windows = create_window_configurations()
 
     local background_float = create_floating_window(windows.background)
     local header_float = create_floating_window(windows.header)
@@ -129,7 +134,6 @@ M.start_presentation = function(opts)
         vim.api.nvim_buf_set_lines(body_float.buf, 0, -1, false, slide.body)
     end
 
-    local current_slide = 1
     vim.keymap.set("n", "n", function()
         current_slide = math.min(current_slide + 1, #parsed.slides)
         set_slide_content(current_slide)
@@ -172,8 +176,35 @@ M.start_presentation = function(opts)
 
             -- pcall this, because it is annoying if it fails
             --  i.e. call in protected mode and to not propagate any errors
-            pcall(vim.api.nvim_win_close, header_float.win, true)
-            pcall(vim.api.nvim_win_close, background_float.win, true)
+            --  Funny: at least on the Win CMD: Neovim/CMD crash
+            --      when I leave the present mode after resizing
+            --      Zooming in, then quit -> crash with pcall
+            --      Zooming in, then quit -> without pcall works
+            --      Zooming out, then quit -> without pcall still crashes
+            -- but something with resizing the window always was wonky on windows..
+            -- (although win11 has become way more stable than win 10...)
+            --pcall(vim.api.nvim_win_close, header_float.win, true)
+            --pcall(vim.api.nvim_win_close, background_float.win, true)
+            vim.api.nvim_win_close(header_float.win, true)
+            vim.api.nvim_win_close(background_float.win, true)
+        end
+    })
+
+
+    vim.api.nvim_create_autocmd("VimResized", {
+        group = vim.api.nvim_create_augroup("present-resized", {}),
+        callback = function()
+            if not vim.api.nvim_win_is_valid(body_float.win) or body_float.win == nil then
+                return
+            end
+
+            local updated = create_window_configurations()
+            vim.api.nvim_set_config(header_float.win, updated.header)
+            vim.api.nvim_set_config(body_float.win, updated.body)
+            vim.api.nvim_set_config(background_float.win, updated.background)
+
+            -- re-calculates current content
+            set_slide_content(current_slide)
         end
     })
 
@@ -185,7 +216,7 @@ end
 --- quick&dirty workaround: open the md file in a neovim buffer
 ---:echo nvim_get_current_buf()
 --- and type in the number here as a parameter
-M.start_presentation { bufnr = 11 }
+M.start_presentation { bufnr = 9 }
 ---vim.print(parse_slides {
 ---    "# Hello",
 ---    "this is something else",
