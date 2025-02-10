@@ -26,8 +26,6 @@ Plug('L3MON4D3/LuaSnip')     -- Required
 -- actual LSP0 wrapping everything
 Plug('VonHeikemen/lsp-zero.nvim', { branch = 'v2.x'})
 
-Plug('puremourning/vimspector')
-
 Plug('voldikss/vim-floaterm')
 
 -- show structure of a file?
@@ -38,7 +36,6 @@ Plug('stevearc/aerial.nvim')
 Plug('Shatur/neovim-ayu')
 
 Plug('ThePrimeagen/vim-be-good')
-
 
 
 vim.call('plug#end')
