@@ -4,7 +4,7 @@ local current_dir = vim.fn.getcwd()
 
 return {
     {
- --       dir = "..\\..\\..\\plugged\\present.nvim",
+--        dir = "..\\..\\..\\plugged\\present.nvim",
 --        dir = "..\\plugged\\present.nvim",
         dir = "plugged\\present.nvim",
         config = function ()
