@@ -9,10 +9,14 @@ M.setup = function()
     -- part for user configuration
 end
 
-local create_window_configurations = function ()
-
+local create_window_configurations = function()
     local width = vim.o.columns
     local height = vim.o.lines
+
+    local header_height = 1 + 2                                    -- 1 line + border
+    local footer_height = 1                                        -- no border for now
+    local body_height = height - header_height - footer_height - 2 -- for own border
+
     return {
         -- one window config for whole wrapping window
         background = {
@@ -39,28 +43,40 @@ local create_window_configurations = function ()
         body = {
             relative = "editor",
             width = width - 8,
-            height = height - 5,
+            --height = height - 5,
+            height = body_height,
             style = "minimal", -- No borders or extra UI elements
             border = { "#", "#", "#", "#", "#", "#", "#", "#" },
             --border = { " ", " ", " ", " ", " ", " ", " ", " " },
             col = 8,
-            row = 4,
-        }
-        -- footer = {},
+            row = header_height,
+        },
+        footer = {
+            relative = "editor",
+            width = width,
+            height = footer_height,
+            style = "minimal",
+            col = 0,
+            row = height - 1,
+            zindex = 2,
+        },
     }
 end
 
-local function create_floating_window(config)
+local function create_floating_window(config, enter)
+    if enter == nil then
+        enter = false
+    end
     -- Create a buffer
     local buf = vim.api.nvim_create_buf(false, true) -- No file, scratch buffer
     -- Create the floating window
-    local win = vim.api.nvim_open_win(buf, true, config)
+    local win = vim.api.nvim_open_win(buf, enter or false, config)
 
-    -- For me the Floatborder has a black bg 
+    -- For me the Floatborder has a black bg
     -- having multiple floats with the greyish blue will make it look wonky
     -- so we override the highlight, with a local ns and only for this window
     local ns = vim.api.nvim_create_namespace("present")
-    vim.api.nvim_set_hl(ns, "FloatBorder", {bg="#1f2430"})
+    vim.api.nvim_set_hl(ns, "FloatBorder", { bg = "#1f2430" })
     vim.api.nvim_win_set_hl_ns(win, ns)
 
     return { buf = buf, win = win }
@@ -100,7 +116,6 @@ local parse_slides = function(lines)
             table.insert(current_slide.body, line)
         end
 
-        table.insert(current_slide, line)
     end
     table.insert(slides.slides, current_slide)
 
@@ -126,31 +141,35 @@ local present_keymap = function(mode, key, callback)
 end
 
 M.start_presentation = function(opts)
-    print(opts)
     opts = opts or {}
     opts.bufnr = opts.bufnr or 0
 
     local lines = vim.api.nvim_buf_get_lines(opts.bufnr, 0, -1, false)
     state.parsed = parse_slides(lines)
-    state.current_slide = 1
-    local width = vim.o.columns
+    state.title = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(opts.bufnr), ":t")
 
     local windows = create_window_configurations()
-
     state.floats.background = create_floating_window(windows.background)
     state.floats.header = create_floating_window(windows.header)
-    state.floats.body = create_floating_window(windows.body)
+    state.floats.body = create_floating_window(windows.body, true)
+    state.floats.footer = create_floating_window(windows.footer)
 
     foreach_float(function(_, float)
-       vim.bo[float.buf].filetype = "markdown"
+        vim.bo[float.buf].filetype = "markdown"
     end)
 
     local set_slide_content = function(idx)
         local slide = state.parsed.slides[idx]
+        local width = vim.o.columns
 
         local padding = string.rep(" ", (width - #slide.title) / 2)
         local title = padding .. slide.title
         vim.api.nvim_buf_set_lines(state.floats.header.buf, 0, -1, false, { title })
+        local footer = string.format("   %d / %d | %s",
+            state.current_slide, 
+            #state.parsed.slides,
+            state.title)
+        vim.api.nvim_buf_set_lines(state.floats.footer.buf, 0, -1, false, { footer })
         vim.api.nvim_buf_set_lines(state.floats.body.buf, 0, -1, false, slide.body)
     end
 
@@ -205,8 +224,11 @@ M.start_presentation = function(opts)
             -- (although win11 has become way more stable than win 10...)
             --pcall(vim.api.nvim_win_close, header_float.win, true)
             --pcall(vim.api.nvim_win_close, background_float.win, true)
-            vim.api.nvim_win_close(state.floats.header.win, true)
-            vim.api.nvim_win_close(state.floats.background.win, true)
+            --vim.api.nvim_win_close(state.floats.header.win, true)
+            --vim.api.nvim_win_close(state.floats.background.win, true)
+            foreach_float(function(_, float)
+                vim.api.nvim_win_close(float.win, true)
+            end)
         end
     })
 
@@ -219,9 +241,9 @@ M.start_presentation = function(opts)
             end
 
             local updated = create_window_configurations()
-            vim.api.nvim_set_config(state.floats.header.win, updated.header)
-            vim.api.nvim_set_config(state.floats.body.win, updated.body)
-            vim.api.nvim_set_config(state.floats.background.win, updated.background)
+            foreach_float(function(name, _)
+                vim.api.nvim_win_set_config(state.floats[name].win, updated[name])
+            end)
 
             -- re-calculates current content
             set_slide_content(state.current_slide)
@@ -246,5 +268,8 @@ vim.api.nvim_create_user_command('PresentMarkdown',
     end,
     {}
 )
+
+-- expose it to test it, but not as a usable public interface, hence the underscore
+M._parse_slides = parse_slides
 
 return M
