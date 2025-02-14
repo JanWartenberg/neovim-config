@@ -86,8 +86,13 @@ end
 ---@fields slides present.Slide: The slides of the file
 
 ---@class present.Slide
----@filed title string: the title of the slide
----@filed body string[]: the body of the slide
+---@field title string: the title of the slide
+---@field body string[]: the body of the slide
+---@field blocks present.Block[]: codeblock within the slide
+
+---@class present.Block
+---@field language string: The language of the codeblock
+---@filed body string: the body of the codefblock
 
 --- Takes some lines and parses them
 ---@param lines string[]: The lines in the buffer
@@ -96,7 +101,8 @@ local parse_slides = function(lines)
     local slides = { slides = {} }
     local current_slide = {
         title = "",
-        body = {}
+        body = {},
+        blocks = {},
     }
 
     local separator = "^#"
@@ -110,14 +116,42 @@ local parse_slides = function(lines)
 
             current_slide = {
                 title = line,
-                body = {}
+                body = {},
+                blocks = {}
             }
         else
             table.insert(current_slide.body, line)
         end
-
     end
     table.insert(slides.slides, current_slide)
+
+    for _, slide in ipairs(slides.slides) do
+        local block = {
+            language = nil,
+            body = "",
+        }
+        local inside_block = false
+        for _, line in ipairs(slide.body) do
+            if vim.startswith(line, "```") then
+                if not inside_block then
+                    inside_block = true
+                    block.language = string.sub(line, 4)
+                else
+                    inside_block = false
+                    block.body = vim.trim(block.body)
+                    table.insert(slide.blocks, block)
+                end
+            else
+                -- Ok, we are inside of current block
+                -- but it is not one of the guards
+                -- so insert this text
+                if inside_block then
+                    block.body = block.body .. line .. "\n"
+                end
+            end
+        end
+    end
+
 
     return slides
 end
@@ -134,10 +168,74 @@ local foreach_float = function(cb)
     end
 end
 
-local present_keymap = function(mode, key, callback)
+local present_keymap = function(mode, key, callback, buf)
+    if buf == nil then
+        buf = state.floats.body.buf
+    end
     vim.keymap.set(mode, key, callback, {
-        buffer = state.floats.body.buf
+        buffer = buf })
+end
+
+local execute_lua = function()
+    local slide = state.parsed.slides[state.current_slide]
+    -- TODO: Make a way for people to execute this for other languages
+    --vim.print(slide)
+    local block = slide.blocks[1]
+    if not block then
+        print("No blocks on this page")
+        return
+    end
+
+    -- Override the default print function, to capture all of the output
+    -- Store the original print function
+    local original_print = print
+    -- Table to capture print messages
+    local output = { "", "# Code", "", "```" .. block.language }
+    vim.list_extend(output, vim.split(block.body, "\n"))
+    table.insert(output, "```")
+
+    -- Redefine the print function
+    print = function(...)
+        local args = { ... }
+        local message = table.concat(vim.tbl_map(tostring, args), "\t")
+        table.insert(output, message)
+    end
+
+    local chunk, _ = loadstring(block.body)
+    -- Call the provided function
+    pcall(function()
+        table.insert(output, "")
+        table.insert(output, "# Output ")
+        table.insert(output, "")
+        if chunk then
+            chunk()
+        else
+            table.insert(output, " <<< BROKEN CODE >>>")
+        end
+    end)
+    -- Restore the original print function
+    print = original_print
+
+    local buf = vim.api.nvim_create_buf(false, true)     -- No file, scratch buffer
+    local temp_width = math.floor(vim.o.columns * 0.8)
+    local temp_height = math.floor(vim.o.lines * 0.8)
+    local win = vim.api.nvim_open_win(buf, true, {
+        relative = "editor",
+        style = "minimal",
+        noautocmd = true,
+        border = "rounded",
+        width = temp_width,
+        height = temp_height,
+        row = math.floor((vim.o.lines - temp_height) / 2),
+        col = math.floor((vim.o.columns - temp_width) / 2),
     })
+
+    present_keymap("n", "q", function()
+        vim.api.nvim_win_close(win, true)
+    end, buf)
+
+    vim.bo[buf].filetype = "markdown"
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, output)
 end
 
 M.start_presentation = function(opts)
@@ -166,7 +264,7 @@ M.start_presentation = function(opts)
         local title = padding .. slide.title
         vim.api.nvim_buf_set_lines(state.floats.header.buf, 0, -1, false, { title })
         local footer = string.format("   %d / %d | %s",
-            state.current_slide, 
+            state.current_slide,
             #state.parsed.slides,
             state.title)
         vim.api.nvim_buf_set_lines(state.floats.footer.buf, 0, -1, false, { footer })
@@ -187,6 +285,7 @@ M.start_presentation = function(opts)
     present_keymap("n", "q", function()
         vim.api.nvim_win_close(state.floats.body.win, true)
     end)
+    present_keymap("n", "X", execute_lua)
 
     local restore = {
         cmdheight = {
@@ -254,12 +353,6 @@ M.start_presentation = function(opts)
     --vim.api.nvim_buf_set_lines(float.buf, 0, -1, false, parsed.slides[1])
     set_slide_content(state.current_slide)
 end
-
---- quick&dirty workaround: open the md file in a neovim buffer
----:echo nvim_get_current_buf()
---- and type in the number here as a parameter
---- M.start_presentation { bufnr = 9 }
-
 
 -- expose it to test it, but not as a usable public interface, hence the underscore
 M._parse_slides = parse_slides

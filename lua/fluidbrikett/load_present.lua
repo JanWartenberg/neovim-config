@@ -3,7 +3,7 @@
 
 vim.api.nvim_create_user_command('PresentMarkdown',
     function()
-        require("present").start_presentation (
+        require("my_plugins.present.lua.present").start_presentation (
             { bufnr = vim.fn.bufnr('%') }
         )
     end,
