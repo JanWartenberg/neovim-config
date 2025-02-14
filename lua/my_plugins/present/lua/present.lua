@@ -260,14 +260,6 @@ end
 --- and type in the number here as a parameter
 --- M.start_presentation { bufnr = 9 }
 
-vim.api.nvim_create_user_command('PresentMarkdown',
-    function()
-        M.start_presentation(
-            { bufnr = vim.fn.bufnr('%') }
-        )
-    end,
-    {}
-)
 
 -- expose it to test it, but not as a usable public interface, hence the underscore
 M._parse_slides = parse_slides

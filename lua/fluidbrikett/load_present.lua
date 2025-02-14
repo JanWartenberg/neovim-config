@@ -1,14 +1,12 @@
 -- print "fluidbrikett/present trying to load the plugin"
-local current_dir = vim.fn.getcwd()
 -- print("Current directory:", current_dir)
 
-return {
-    {
---        dir = "..\\..\\..\\plugged\\present.nvim",
---        dir = "..\\plugged\\present.nvim",
-        dir = "plugged\\present.nvim",
-        config = function ()
-            require("present")
-        end
-    }
-}
+vim.api.nvim_create_user_command('PresentMarkdown',
+    function()
+        require("present").start_presentation (
+            { bufnr = vim.fn.bufnr('%') }
+        )
+    end,
+    {}
+)
+
