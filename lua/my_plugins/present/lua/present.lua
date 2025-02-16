@@ -78,7 +78,7 @@ local function create_floating_window(config, enter)
 end
 
 ---@class present.Slides
----@fields slides present.Slide: The slides of the file
+---@field slides present.Slide: The slides of the file
 
 ---@class present.Slide
 ---@field title string: the title of the slide
