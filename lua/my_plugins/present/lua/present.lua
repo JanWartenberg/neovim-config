@@ -203,20 +203,23 @@ local execute_lua_code = function(block)
     return output
 end
 
----Default executor for javascript code
----@param block present.Block
-local execute_js_code = function(block)
-    local tempfile = vim.fn.tempname()
-    vim.fn.writefile(vim.split(block.body, "\n"), tempfile)
-    local result = vim.system({"node", tempfile}, {text = true}):wait()
-    return vim.split(result.stdout, "\n")
 
+---Default system executor
+---@param program string CLI command to execute code in given language
+M.create_system_executor = function(program)
+    return function(block)
+        local tempfile = vim.fn.tempname()
+        vim.fn.writefile(vim.split(block.body, "\n"), tempfile)
+        local result = vim.system({program, tempfile}, {text = true}):wait()
+        return vim.split(result.stdout, "\n")
+    end
 end
 
 local options = {
     executors = {
         lua = execute_lua_code,
-        javascript = execute_js_code
+        javascript = M.create_system_executor("node"),
+        python = M.create_system_executor("python"),
     }
 }
 
@@ -226,6 +229,8 @@ M.setup = function(opts)
     opts.executors = opts.executors or {}
 
     opts.executors.lua = opts.executors.lua or execute_lua_code
+    opts.executors.python = opts.executors.python or M.create_system_executor("python")
+    opts.executors.javascript = opts.executors.javascript or M.create_system_executor("node")
 
     options = opts
 end
