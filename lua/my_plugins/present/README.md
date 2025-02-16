@@ -11,6 +11,15 @@ print("Hello world", 42)
 
 ```
 
+# Multi-Lang support
+
+If configured, other language than lua can be executed:
+
+```javascript
+console.log("Hello Node", 23);
+console.log({myfield: true, other:false});
+```
+
 # Usage
 
 ```lua

@@ -4,11 +4,6 @@
 
 local M = {}
 
-M.setup = function()
-    -- nothing
-    -- part for user configuration
-end
-
 local create_window_configurations = function()
     local width = vim.o.columns
     local height = vim.o.lines
@@ -92,7 +87,7 @@ end
 
 ---@class present.Block
 ---@field language string: The language of the codeblock
----@filed body string: the body of the codefblock
+---@field body string: the body of the codefblock
 
 --- Takes some lines and parses them
 ---@param lines string[]: The lines in the buffer
@@ -176,23 +171,14 @@ local present_keymap = function(mode, key, callback, buf)
         buffer = buf })
 end
 
-local execute_lua = function()
-    local slide = state.parsed.slides[state.current_slide]
-    -- TODO: Make a way for people to execute this for other languages
-    --vim.print(slide)
-    local block = slide.blocks[1]
-    if not block then
-        print("No blocks on this page")
-        return
-    end
-
+---Default executor for lua code
+---@param block present.Block
+local execute_lua_code = function(block)
     -- Override the default print function, to capture all of the output
     -- Store the original print function
     local original_print = print
-    -- Table to capture print messages
-    local output = { "", "# Code", "", "```" .. block.language }
-    vim.list_extend(output, vim.split(block.body, "\n"))
-    table.insert(output, "```")
+
+    local output = {}
 
     -- Redefine the print function
     print = function(...)
@@ -201,20 +187,74 @@ local execute_lua = function()
         table.insert(output, message)
     end
 
-    local chunk, _ = loadstring(block.body)
     -- Call the provided function
+    local chunk, _ = loadstring(block.body)
     pcall(function()
-        table.insert(output, "")
-        table.insert(output, "# Output ")
-        table.insert(output, "")
         if chunk then
             chunk()
         else
             table.insert(output, " <<< BROKEN CODE >>>")
         end
     end)
+
     -- Restore the original print function
     print = original_print
+
+    return output
+end
+
+---Default executor for javascript code
+---@param block present.Block
+local execute_js_code = function(block)
+    local tempfile = vim.fn.tempname()
+    vim.fn.writefile(vim.split(block.body, "\n"), tempfile)
+    local result = vim.system({"node", tempfile}, {text = true}):wait()
+    return vim.split(result.stdout, "\n")
+
+end
+
+local options = {
+    executors = {
+        lua = execute_lua_code,
+        javascript = execute_js_code
+    }
+}
+
+M.setup = function(opts)
+    -- part for user configuration
+    opts = opts or {}
+    opts.executors = opts.executors or {}
+
+    opts.executors.lua = opts.executors.lua or execute_lua_code
+
+    options = opts
+end
+
+local execute_code = function()
+    local slide = state.parsed.slides[state.current_slide]
+    local block = slide.blocks[1]
+    if not block then
+        print("No blocks on this page")
+        return
+    end
+
+    local executor = options.executors[block.language]
+    if not executor then
+        print("No valid executor for this language")
+        return
+    end
+
+    -- Table to capture print messages
+    local output = { "# Code", "", "```" .. block.language }
+    vim.list_extend(output, vim.split(block.body, "\n"))
+    table.insert(output, "```")
+
+    table.insert(output, "")
+    table.insert(output, "# Output")
+    table.insert(output, "")
+    table.insert(output, "```")
+    vim.list_extend(output, executor(block))
+    table.insert(output, "```")
 
     local buf = vim.api.nvim_create_buf(false, true)     -- No file, scratch buffer
     local temp_width = math.floor(vim.o.columns * 0.8)
@@ -285,7 +325,7 @@ M.start_presentation = function(opts)
     present_keymap("n", "q", function()
         vim.api.nvim_win_close(state.floats.body.win, true)
     end)
-    present_keymap("n", "X", execute_lua)
+    present_keymap("n", "X", execute_code)
 
     local restore = {
         cmdheight = {
