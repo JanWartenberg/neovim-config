@@ -1,5 +1,5 @@
 -- let this be my central nvim config
-require("fluidbrikett.remap")
+local remap = require("fluidbrikett.remap")
 require("fluidbrikett.vim-plug")
 require("fluidbrikett.shortcuts")
 require("fluidbrikett.load_present")
@@ -43,7 +43,7 @@ vim.opt.shada = "!,'400,<400,s200,h"
 
 vim.opt.incsearch = true        --enable incremental search
 
-vim.opt.scrolloff = 8
+vim.opt.scrolloff = remap.scrolloff
 vim.opt.signcolumn = "yes"      --sign column: dedicated area on the left side of the editor 
 vim.opt.isfname:append("@-@")
 

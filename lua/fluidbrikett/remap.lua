@@ -1,7 +1,15 @@
+local M = {}
+M.scrolloff = 8
 vim.g.mapleader = " "
 
 -- open same file again (split vertically) and scroll down
-vim.keymap.set("n", "<leader>ss", "<C-w>v<C-w>w100j")
+-- instead of a wild guess, now take window size into account
+vim.keymap.set("n", "<leader>ss", function ()
+    local winheight = vim.fn.winheight(vim.fn.winnr())  - M.scrolloff
+    local command = string.format("<C-w>v<C-w>w%d<C-e>", winheight)
+    command = vim.api.nvim_replace_termcodes(command, false, false, true)
+    vim.api.nvim_feedkeys(command, "n", false)
+end)
 
 -- jumpt to netrw
 vim.keymap.set("n", "<leader>ff", vim.cmd.Ex)
@@ -87,3 +95,5 @@ vim.keymap.set('n', "<leader>lb", "<cmd>e #<CR>")
 
 
 vim.keymap.set("x", "<C-v>", "<nop>")
+
+return M
