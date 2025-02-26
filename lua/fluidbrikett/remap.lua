@@ -43,9 +43,13 @@ vim.keymap.set({ "n" }, "<leader>r", [[viw"0p]])
 vim.keymap.set("i", "<C-c>", "<Esc>")
 -- commonly used remap to go from insert to normal..
 vim.keymap.set("i", "jk", "<Esc>")
-
 -- remap this, which is short for :q! per default
 vim.keymap.set("n", "Q", "<nop>")
+
+
+vim.keymap.set('n', 'grn', vim.lsp.buf.rename)
+vim.keymap.set('n', 'gra', vim.lsp.buf.code_action)
+vim.keymap.set('n', 'grr', vim.lsp.buf.references)
 vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
 -- Show LSP diagnostic (i.e. Warning/Errors) in floating window 
 -- (in case message is cropped in small window)
