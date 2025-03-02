@@ -36,6 +36,8 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 -- "+y$  yank to system clip till end of line
 vim.keymap.set({ "n" }, "<leader>c", [["+y$]])
 
+vim.keymap.set({ "n", "v" }, "<leader>b", YankCurrentBuffPath)
+
 -- yank+replace current word
 vim.keymap.set({ "n" }, "<leader>r", [[viw"0p]])
 

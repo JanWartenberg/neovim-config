@@ -20,6 +20,8 @@ end, { nargs = '*' })
 -- Use it on itself to define a simpler abbreviation for itself.
 vim.cmd("CommandCabbr ccab CommandCabbr")
 
+-- ---------
+-- Path shortcuts
 vim.g.Dropbox = vim.g.homedir .. "\\Dropbox"
 vim.g.DropboxCode = vim.g.homedir .. "\\Dropbox\\wichtiges\\Code"
 vim.g.DropboxGitarre = vim.g.homedir .. "\\Dropbox\\wichtiges\\Gitarre\\Tabs"
@@ -45,7 +47,23 @@ vim.api.nvim_create_user_command('Nvconf', function()
     vim.cmd("Nvimconfig")
 end, {})
 vim.cmd("CommandCabbr nvc Nvconf")
+-- Path shortcuts end
+-- ---------
 
+function OpenExplorer()
+  local current_dir = vim.fn.expand('%:p:h')
+  vim.fn.system('explorer.exe "' .. current_dir .. '"')
+end
+vim.api.nvim_create_user_command('WinExplorer', OpenExplorer, {})
+
+
+--  yank path of current buffer into (system) clipboard
+function YankCurrentBuffPath()
+    local buffpath = vim.api.nvim_buf_get_name(0)
+    vim.fn.setreg('+', buffpath)
+    --vim.cmd('let @+ = "' .. vim.fn.escape(buffpath, '"') .. '"')
+end
+vim.api.nvim_create_user_command('Buffpathyank', YankCurrentBuffPath, {})
 
 local function vim_grep_error_handled (grep_string)
     vim.notify("vimgrep "..grep_string)
@@ -70,11 +88,6 @@ vim.api.nvim_create_user_command('Listentrysearch',
     {}
 )
 
-function OpenExplorer()
-  local current_dir = vim.fn.expand('%:p:h')
-  vim.fn.system('explorer.exe "' .. current_dir .. '"')
-end
-vim.api.nvim_create_user_command('WinExplorer', OpenExplorer, {})
 
 -- make wso to write file AND shoutout (execute script) directly
 vim.api.nvim_create_user_command('Wso', function ()
