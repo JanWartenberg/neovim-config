@@ -1,3 +1,5 @@
+require("fluidbrikett.shortcuts")
+
 local M = {}
 M.scrolloff = 8
 vim.g.mapleader = " "
