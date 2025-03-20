@@ -95,6 +95,10 @@ vim.keymap.set({"n", "v"}, "<leader>h", "<cmd>nohlsearch<CR>")
 vim.keymap.set('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=0 <CR>")
 vim.keymap.set('n', "<leader>fn", ":FloatermNext <CR>")
 vim.keymap.set('t', "<leader>fn", "<C-\\><C-n>:FloatermNext <CR>")
+vim.keymap.set('t', "<leader>fp", "<C-\\><C-n>:FloatermPrev <CR>")
+vim.keymap.set('n', "<leader>fp", ":FloatermPrev <CR>")
+vim.keymap.set('n', "<leader>fs", ":FloatermShow <CR>")
+
 vim.keymap.set('n', "<C-t>", ":FloatermToggle myfloat <CR>")
 vim.keymap.set('t', "<Esc>", "<C-\\><C-n>:q<CR>")
 
