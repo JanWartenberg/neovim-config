@@ -3,6 +3,8 @@ local remap = require("fluidbrikett.remap")
 require("fluidbrikett.vim-plug")
 require("fluidbrikett.shortcuts")
 require("fluidbrikett.load_present")
+require("fluidbrikett.menu")
+require("my_plugins.test_lsp.lua.load_test_lsp")
 
 -- path to python (python env including pynim)
 vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
@@ -51,6 +53,9 @@ vim.opt.updatetime = 50
 
 vim.opt.timeoutlen = 500
 
+-- block shaped cursor in normal/visual/select mode
+-- vertical bar cursor with 20% width in insert/command-line/insert-completion/virtual replace mode
+-- horizontal bar cursor with height of 50% in replace / operator-pending mode
 vim.opt.guicursor = "n-v-sm:block,i-c-ci-cr-ve:ver20,r-o:hor50"
 
 -- auto change dir in net rw
