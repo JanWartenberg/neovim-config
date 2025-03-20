@@ -57,6 +57,12 @@ end
 vim.api.nvim_create_user_command('WinExplorer', OpenExplorer, {})
 
 
+-- Kill all other Buffers except this one
+function OnlyBuffer()
+    vim.cmd [[ :%bd|e# ]]
+end
+vim.api.nvim_create_user_command('OnlyBuffer', OnlyBuffer, {})
+
 --  yank path of current buffer into (system) clipboard
 function YankCurrentBuffPath()
     local buffpath = vim.api.nvim_buf_get_name(0)
