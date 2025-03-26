@@ -51,9 +51,11 @@ vim.keymap.set("i", "jk", "<Esc>")
 vim.keymap.set("n", "Q", "<nop>")
 
 
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition)
 vim.keymap.set('n', 'grn', vim.lsp.buf.rename)
 vim.keymap.set('n', 'gra', vim.lsp.buf.code_action)
 vim.keymap.set('n', 'grr', vim.lsp.buf.references)
+vim.keymap.set('n', 'grd', Get_current_diagnostic_message)
 vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
 -- Show LSP diagnostic (i.e. Warning/Errors) in floating window 
 -- (in case message is cropped in small window)
@@ -75,6 +77,8 @@ vim.keymap.set({ "n", "v" }, "ö", "{")
 vim.keymap.set({ "n", "v" }, "ä", "}")
 vim.keymap.set({ "n", "v" }, "Ö", "[")
 vim.keymap.set({ "n", "v" }, "Ä", "]")
+vim.keymap.set("i", "<A-.>", "{")
+vim.keymap.set("i", "<A-->", "}")
 
 -- for some reason Ctrl-V is now broken.. (Windows 11??)
 -- allow Block editing:
