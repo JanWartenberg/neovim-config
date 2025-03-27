@@ -10,6 +10,8 @@ require("my_plugins.test_lsp.lua.load_test_lsp")
 vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
 -- vim.g.python3_host_prog = 'D:\\Docs\\Code\\venv\\Scripts\\python.exe'
 
+vim.g.netrw_sort_sequence = [[[\/]$,\~$]]
+
 vim.opt.encoding="utf-8"
 
 -- tabs
