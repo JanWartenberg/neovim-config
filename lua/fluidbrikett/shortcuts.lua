@@ -2,7 +2,6 @@
 -- resp. "user commands", i.e.  something to type in à la
 -- :MyCommand
 
-vim.g.homedir = 'C:\\Users\\janwa'
 
 --- Make an abbreviation for a command - even lowercase command possible
 --- Take care not to remap core commands, of course.
@@ -22,23 +21,12 @@ vim.cmd("CommandCabbr ccab CommandCabbr")
 
 -- ---------
 -- Path shortcuts
-vim.g.Dropbox = vim.g.homedir .. "\\Dropbox"
-vim.g.DropboxCode = vim.g.homedir .. "\\Dropbox\\wichtiges\\Code"
-vim.g.DropboxGitarre = vim.g.homedir .. "\\Dropbox\\wichtiges\\Gitarre\\Tabs"
-vim.g.Nvimconfig = vim.g.homedir .. "\\Appdata\\Local\\nvim"
+-- (might reuse globals that are set in config)
+vim.api.nvim_create_user_command('Source', function()
+    vim.fn.chdir(vim.g.Source)
+    vim.cmd("e " .. vim.g.Source)
+end, {})
 
-vim.api.nvim_create_user_command('Dropbox', function()
-    vim.fn.chdir(vim.g.Dropbox)
-    vim.cmd("e " .. vim.g.Dropbox)
-end, {})
-vim.api.nvim_create_user_command('Gitarre', function()
-    vim.fn.chdir(vim.g.DropboxGitarre)
-    vim.cmd("e " .. vim.g.DropboxGitarre)
-end, {})
-vim.api.nvim_create_user_command('DropboxCode', function()
-    vim.fn.chdir(vim.g.DropboxCode)
-    vim.cmd("e " .. vim.g.DropboxCode)
-end, {})
 vim.api.nvim_create_user_command('Nvimconfig', function()
     vim.fn.chdir(vim.g.Nvimconfig)
     vim.cmd("e " .. vim.g.Nvimconfig)
@@ -142,4 +130,3 @@ vim.api.nvim_create_user_command('Wso', function()
     vim.cmd("so")
 end, {})
 vim.cmd("CommandCabbr wso Wso")
-vim.cmd("CommandCabbr dbc DropboxCode")

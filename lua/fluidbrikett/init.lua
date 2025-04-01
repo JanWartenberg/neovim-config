@@ -1,14 +1,13 @@
 -- let this be my central nvim config
+local config = require("fluidbrikett.config")
 local remap = require("fluidbrikett.remap")
 require("fluidbrikett.vim-plug")
 require("fluidbrikett.shortcuts")
 require("fluidbrikett.load_present")
 require("fluidbrikett.menu")
-require("my_plugins.test_lsp.lua.load_test_lsp")
 
 -- path to python (python env including pynim)
 vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
--- vim.g.python3_host_prog = 'D:\\Docs\\Code\\venv\\Scripts\\python.exe'
 
 vim.g.netrw_sort_sequence = [[[\/]$,\~$]]
 
@@ -112,7 +111,7 @@ end
 -- at startup: open Dropbox
 -- if we did not pass in a file name
 if not open_filename then
-    vim.cmd("Dropbox")  -- vim.cmd("wincmd h")
+    config.Default_startup()
 end
 -- end of stupid hack
 -- -----------------------
