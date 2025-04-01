@@ -68,8 +68,6 @@ vim.opt.hidden = true
 -- Sets the shell to use for system() and ! commands  (use powershell)
 vim.opt.shell = 'powershell.exe'
 vim.opt.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command '
--- vim.opt.shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned '
--- vim.opt.shellcmdflag = '-NoLogo -NoProfile '
 vim.opt.shellxquote = ''
 vim.opt.shellquote = ''
 vim.o.shellpipe = '| Out-File -Encoding UTF8 %s'
