@@ -2,10 +2,13 @@
 -- :so  -> to read the file and interpret it
 -- :PlugInstall -> check if new Plugins are to be installed
 -- :PlugClean -> check if Plugins are removed from here and should be deleted / deinstalled
+local config = require("fluidbrikett.config")
 
 local Plug = vim.fn['plug#']
 
-vim.call('plug#begin', '~/AppData/Local/nvim/plugged')
+local plugdir = config.path_join(vim.g.Nvimconfig, "plugged")
+
+vim.call('plug#begin', plugdir)
 Plug('nvim-lua/plenary.nvim')
 Plug('nvim-telescope/telescope.nvim', { tag = '0.1.5' })
 Plug('nvim-treesitter/nvim-treesitter')

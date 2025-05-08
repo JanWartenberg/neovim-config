@@ -4,12 +4,18 @@ local Config = {}
 Config.ENVS = {
     WORK_PC = {},
     PRIVATE = {},
+    BM_WSL = {},
 }
 
+function Config.path_join(...)
+  local args = {...}
+  local sep = package.config:sub(1,1) -- platform-specific separator
+  return table.concat(args, sep)
+end
 
 -- CHANGE THIS PART ONLY
--- Set the environment to WORK_PC or PRIVATE
--- Example: local environment = Config.ENVS.WORK_PC
+-- Set the environment to any of the ones defined in Config.ENVS
+-- Example: local environment = Config.ENVS.BM_WSL
 local environment = Config.ENVS.PRIVATE
 
 -- Configuration based on environment
@@ -29,12 +35,24 @@ if environment == Config.ENVS.WORK_PC then
         vim.fn.chdir(vim.g.Scratches)
         vim.cmd("e " .. vim.g.Scratches)
     end, {})
+elseif environment == Config.ENVS.BM_WSL then
+    vim.g.homedir = '~'
+    vim.g.Nvimconfig = "~/.config/nvim"
+    vim.g.Source = "C:\\Users\\JAWA\\src"
+    -- path to python (python env including pynim)
+    --vim.g.python3_host_prog = vim.g.homedir .. ''
+
+    Config.Default_startup = function()
+        print("No Default startup for BM WSL.")
+    end
 else
     -- else: ENVS.PRIVATE in our case as long as we have 2 setups only
     require("my_plugins.test_lsp.lua.load_test_lsp")
     vim.g.homedir = 'C:\\Users\\janwa'
     vim.g.Source = "D:\\Docs\\Code"
     vim.g.Nvimconfig = vim.g.homedir .. "\\Appdata\\Local\\nvim"
+    -- path to python (python env including pynim)
+    vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
 
     Config.Default_startup = function()
         vim.cmd("Dropbox")

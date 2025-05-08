@@ -6,9 +6,6 @@ require("fluidbrikett.shortcuts")
 require("fluidbrikett.load_present")
 require("fluidbrikett.menu")
 
--- path to python (python env including pynim)
-vim.g.python3_host_prog = vim.g.homedir .. '\\AppData\\Local\\Programs\\Venv\\pynvim\\Scripts\\python.exe'
-
 vim.g.netrw_sort_sequence = [[[\/]$,\~$]]
 
 vim.opt.encoding="utf-8"
@@ -29,7 +26,9 @@ vim.opt.nu = true               -- still show absolute line number for the curre
 -- rely on undo files and plugin "undotree", not on swap files
 vim.opt.swapfile = false
 vim.opt.backup = false
-vim.opt.undodir = vim.g.homedir .. "\\AppData\\Local\\nvim\\undodir"
+
+local undodir = vim.fn.expand(config.path_join(vim.g.Nvimconfig, "undodir"))
+vim.opt.undodir = undodir
 vim.opt.undofile = true
 
 -- set shada     see :help 'shada'
