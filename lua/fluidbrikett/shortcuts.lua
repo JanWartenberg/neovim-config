@@ -123,6 +123,10 @@ vim.api.nvim_create_user_command('Listentrysearch',
     {}
 )
 
+vim.api.nvim_create_user_command('Datesearch',
+    function() vim_grep_error_handled([[/(\d\+\.\d\+\.\d\+)/g %]]) end,
+    {}
+)
 
 -- make wso to write file AND shoutout (execute script) directly
 vim.api.nvim_create_user_command('Wso', function()
