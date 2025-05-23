@@ -32,12 +32,14 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 -- system clipboard for convenience
 vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set({ "n", "v" }, "<leader>d", [["+d]])
+-- Y  is synonym to yy, which yanks a complete line (resp. N lines)
 vim.keymap.set("n", "<leader>Y", [["+Y]])
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+-- if I want to paste stuff into a new empty line
+vim.keymap.set({ "n", "v" }, "<leader>P", [[o<Esc>"+p]])
 -- y$  yank till end of line (without linebreak)
 -- "+y$  yank to system clip till end of line
 vim.keymap.set({ "n" }, "<leader>c", [["+y$]])
-
 vim.keymap.set({ "n", "v" }, "<leader>b", YankCurrentBuffPath)
 
 -- yank+replace current word
