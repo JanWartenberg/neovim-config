@@ -15,7 +15,7 @@ end
 vim.api.nvim_create_user_command('CommandCabbr', function(opts)
     local args = opts.fargs
     CommandCabbr(args[1], args[2])
-end, { nargs = '*' })
+end, { nargs = "*", desc = "Fluidbrikett: Make an abbreviation for a command, even lowercase command possible" })
 -- Use it on itself to define a simpler abbreviation for itself.
 vim.cmd("CommandCabbr ccab CommandCabbr")
 
@@ -25,16 +25,13 @@ vim.cmd("CommandCabbr ccab CommandCabbr")
 vim.api.nvim_create_user_command('Source', function()
     vim.fn.chdir(vim.g.Source)
     vim.cmd("e " .. vim.g.Source)
-end, {})
+end, { desc = "Fluidbrikett: shorten to change dir to src" })
 
 vim.api.nvim_create_user_command('Nvimconfig', function()
     vim.fn.chdir(vim.g.Nvimconfig)
     vim.cmd("e " .. vim.g.Nvimconfig)
-end, {})
-vim.api.nvim_create_user_command('Nvconf', function()
-    vim.cmd("Nvimconfig")
-end, {})
-vim.cmd("CommandCabbr nvc Nvconf")
+end, { desc = "Fluidbrikett: short to change dir to Neovim Config"})
+vim.cmd("CommandCabbr nvc Nvimconfig")
 -- Path shortcuts end
 -- ---------
 
@@ -43,24 +40,35 @@ function OpenExplorer()
     vim.fn.system('explorer.exe "' .. current_dir .. '"')
 end
 
-vim.api.nvim_create_user_command('WinExplorer', OpenExplorer, {})
+vim.api.nvim_create_user_command('WinExplorer', OpenExplorer,
+    { desc = "Fluidbrikett: Open Windows file exlorer for path of current buffer" })
 
+function FormatWhitespace()
+    -- Remove dangling carriage returns (e.g. when pasting from PDFs)
+    vim.cmd('%s/\r//ge')
+    -- Remove trailing whitespace
+    vim.cmd([[%s/\s\+$//ge]])
+end
+
+vim.api.nvim_create_user_command('FormatWhitespace', FormatWhitespace,
+    { desc = "Fluidbrikett: Format Whitespace, remove dangling CR, remove trailing Whitespace" })
 
 -- Kill all other Buffers except this one
 function OnlyBuffer()
     vim.cmd [[ :%bd|e# ]]
 end
 
-vim.api.nvim_create_user_command('OnlyBuffer', OnlyBuffer, {})
+vim.api.nvim_create_user_command('OnlyBuffer', OnlyBuffer,
+    { desc = "Fluidbrikett: Delete all other buffers except the current one"})
 
 --  yank path of current buffer into (system) clipboard
 function YankCurrentBuffPath()
     local buffpath = vim.api.nvim_buf_get_name(0)
     vim.fn.setreg('+', buffpath)
-    --vim.cmd('let @+ = "' .. vim.fn.escape(buffpath, '"') .. '"')
 end
 
-vim.api.nvim_create_user_command('Buffpathyank', YankCurrentBuffPath, {})
+vim.api.nvim_create_user_command('Buffpathyank', YankCurrentBuffPath,
+    { desc = "Fluidbrikett: Yank path of current buffer into (system) clipboard" })
 
 local function vim_grep_error_handled(grep_string)
     vim.notify("vimgrep " .. grep_string)
@@ -107,7 +115,8 @@ function Get_current_diagnostic_message()
     return "No diagnostic at cursor position"
 end
 
-vim.api.nvim_create_user_command('CurrentDiagnostic', Get_current_diagnostic_message, {})
+vim.api.nvim_create_user_command('CurrentDiagnostic', Get_current_diagnostic_message,
+    { desc = "Fluidbrikett: Copy the diagnostic message at your cursor into system clipboard" })
 
 -- create search for "Headers"
 -- i.e. if I use custom text notes with "====" as headers
@@ -115,22 +124,22 @@ vim.api.nvim_create_user_command('CurrentDiagnostic', Get_current_diagnostic_mes
 -- /\(^.*$\)\n=\{4}/g %
 vim.api.nvim_create_user_command('Headersearch',
     function() vim_grep_error_handled([[/\(^.*$\)\n=\{4}/g %]]) end,
-    {}
+    { desc = "Fluidbrikett: Search for current 'Headers', defined by '===='" }
 )
 -- in custom text notes "* " on begin of line is like a list item
 vim.api.nvim_create_user_command('Listentrysearch',
     function() vim_grep_error_handled([[/^\* \(.*\)$/g %]]) end,
-    {}
+    { desc = "Fluidbrikett: Search for bullet points, defined by '*'" }
 )
 
 vim.api.nvim_create_user_command('Datesearch',
     function() vim_grep_error_handled([[/(\d\+\.\d\+\.\d\+)/g %]]) end,
-    {}
+    { desc = "Fluidbrikett: Search for Dates, like (dd.mm.yyyy)" }
 )
 
 -- make wso to write file AND shoutout (execute script) directly
 vim.api.nvim_create_user_command('Wso', function()
     vim.cmd("w")
     vim.cmd("so")
-end, {})
+end, { desc = "Fluidbrikett: Shortened: save and source current buffer" })
 vim.cmd("CommandCabbr wso Wso")
