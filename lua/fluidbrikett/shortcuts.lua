@@ -44,10 +44,12 @@ vim.api.nvim_create_user_command('WinExplorer', OpenExplorer,
     { desc = "Fluidbrikett: Open Windows file exlorer for path of current buffer" })
 
 function FormatWhitespace()
+    local cursor_pos = vim.api.nvim_win_get_cursor(0)
     -- Remove dangling carriage returns (e.g. when pasting from PDFs)
     vim.cmd('%s/\r//ge')
     -- Remove trailing whitespace
     vim.cmd([[%s/\s\+$//ge]])
+    vim.api.nvim_win_set_cursor(0, cursor_pos)
 end
 
 vim.api.nvim_create_user_command('FormatWhitespace', FormatWhitespace,
