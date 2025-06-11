@@ -50,10 +50,21 @@ function FormatWhitespace()
     -- Remove trailing whitespace
     vim.cmd([[%s/\s\+$//ge]])
     vim.api.nvim_win_set_cursor(0, cursor_pos)
+    vim.cmd [[ :nohlsearch ]]
 end
 
 vim.api.nvim_create_user_command('FormatWhitespace', FormatWhitespace,
     { desc = "Fluidbrikett: Format Whitespace, remove dangling CR, remove trailing Whitespace" })
+
+
+-- join all lines in current buffer, but insert an explicit line break
+function JoinAllLines()
+    vim.cmd([[%s/\n/\\n/g]])        -- :%s/\n/\\n/g
+    vim.cmd [[ :nohlsearch ]]
+end
+vim.api.nvim_create_user_command('JoinAllLines', JoinAllLines,
+    { desc = "Fluidbrikett: Join All Lines of current Buffer" })
+
 
 -- Kill all other Buffers except this one
 function OnlyBuffer()
