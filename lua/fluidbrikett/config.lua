@@ -50,6 +50,9 @@ elseif environment == Config.ENVS.DOCKER then
     vim.g.homedir= '~'
     vim.g.Nvimconfig = "/root/.config/nvim"
     vim.g.Source = "/tmp/"
+    Config.Default_startup = function ()
+        vim.cmd("Nvimconfig")
+    end
 else
     -- else: ENVS.PRIVATE in our case
     require("my_plugins.test_lsp.lua.load_test_lsp")
