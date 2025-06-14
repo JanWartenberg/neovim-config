@@ -26,19 +26,14 @@ Plug('williamboman/mason-lspconfig.nvim') -- Optional
 Plug('hrsh7th/nvim-cmp')     -- Required
 Plug('hrsh7th/cmp-nvim-lsp') -- Required
 Plug('L3MON4D3/LuaSnip')     -- Required
--- actual LSP0 wrapping everything
-Plug('VonHeikemen/lsp-zero.nvim', { branch = 'v2.x'})
 
 Plug('voldikss/vim-floaterm')
 
 -- show structure of a file?
 Plug('stevearc/aerial.nvim')
 
-
 -- ayu colorscheme
 Plug('Shatur/neovim-ayu')
-
-Plug('ThePrimeagen/vim-be-good')
 
 
 vim.call('plug#end')

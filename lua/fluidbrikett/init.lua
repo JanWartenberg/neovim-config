@@ -3,6 +3,7 @@ local config = require("fluidbrikett.config")
 local remap = require("fluidbrikett.remap")
 require("fluidbrikett.vim-plug")
 require("fluidbrikett.shortcuts")
+require("fluidbrikett.lsp")
 require("fluidbrikett.load_present")
 require("fluidbrikett.menu")
 
