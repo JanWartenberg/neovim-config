@@ -5,6 +5,7 @@ Config.ENVS = {
     WORK_PC = {},
     PRIVATE = {},
     BM_WSL = {},
+    DOCKER = {},
 }
 
 function Config.path_join(...)
@@ -45,8 +46,12 @@ elseif environment == Config.ENVS.BM_WSL then
     Config.Default_startup = function()
         print("No Default startup for BM WSL.")
     end
+elseif environment == Config.ENVS.DOCKER then
+    vim.g.homedir= '~'
+    vim.g.Nvimconfig = "/root/.config/nvim"
+    vim.g.Source = "/tmp/"
 else
-    -- else: ENVS.PRIVATE in our case as long as we have 2 setups only
+    -- else: ENVS.PRIVATE in our case
     require("my_plugins.test_lsp.lua.load_test_lsp")
     vim.g.homedir = 'C:\\Users\\janwa'
     vim.g.Source = "D:\\Docs\\Code"
