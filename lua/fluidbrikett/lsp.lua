@@ -77,12 +77,14 @@ for _, server in ipairs(servers) do
             },
         }
     elseif server == 'tsserver' then
+        server_config.cmd = { 'typescript-language-server', '--stdio' }
         -- Tsserver typically handles JS/TS/JSX/TSX well.
         -- Often used with root_markers like package.json, tsconfig.json.
-        server_config.filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'vue' }
+        server_config.filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'vue', 'json' }
         server_config.root_markers = { 'package.json', 'tsconfig.json', '.git' }
         -- If you use specific TS plugins (like for Vue or Svelte)
         server_config.init_options = {
+            provideFormatter = true,
             plugins = {
                 -- { name = "@vue/typescript-plugin" }, -- Example for Vue support
             },

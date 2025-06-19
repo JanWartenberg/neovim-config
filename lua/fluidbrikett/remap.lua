@@ -69,8 +69,11 @@ vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 vim.keymap.set("n", "<leader>ä", vim.diagnostic.goto_next)
 vim.keymap.set("n", "<leader>ö", vim.diagnostic.goto_prev)
 
+-- up and down in quickfix list
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
+vim.keymap.set("n", "<leader>q", "<cmd>cclose<CR>zz")  -- close quicklist pane
+-- up and down in location list
 vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
 
