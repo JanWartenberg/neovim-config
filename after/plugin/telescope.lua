@@ -9,3 +9,5 @@ vim.keymap.set('n', '<C-g>', function()
 end)
 vim.keymap.set('n', '<C-h>', builtin.oldfiles, {})
 vim.keymap.set('n', '<C-q>', builtin.quickfix, {}) -- quickfixhistory would be an alternative
+
+require "fluidbrikett.multigrep".setup()

@@ -1,3 +1,6 @@
+-- This file is supposed to carry enviroment configs
+-- for needed distinctions between installations.
+--  i.e. Paths might be different on private Laptop than WSL on Work PC..
 local Config = {}
 
 -- lua has no ENUMs but we can do this:

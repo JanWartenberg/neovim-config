@@ -1,5 +1,5 @@
--- print "fluidbrikett/present trying to load the plugin"
--- print("Current directory:", current_dir)
+-- Just include the PresentMarkdown plugin
+-- by TJ DeVries
 
 vim.api.nvim_create_user_command('PresentMarkdown',
     function()

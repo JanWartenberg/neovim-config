@@ -1,3 +1,6 @@
+-- This contains all customizations regarding
+-- the context menu. (Mouse Clicks in Nvim!)
+
 -- TODO think what might be nice 
 --   take default and extend it?
 --   e.g. by "copy Buffer Path"?

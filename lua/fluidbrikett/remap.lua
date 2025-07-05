@@ -1,3 +1,6 @@
+-- All general Key Map settings
+-- Although after/plugin can have some plugin specific ones, too
+
 require("fluidbrikett.shortcuts")
 
 local M = {}

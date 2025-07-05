@@ -6,6 +6,7 @@ require("fluidbrikett.shortcuts")
 require("fluidbrikett.lsp")
 require("fluidbrikett.load_present")
 require("fluidbrikett.menu")
+require("fluidbrikett.multigrep")
 
 vim.g.netrw_sort_sequence = [[[\/]$,\~$]]
 
