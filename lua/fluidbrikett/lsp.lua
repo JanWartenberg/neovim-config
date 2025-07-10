@@ -1,132 +1,67 @@
--- List of servers to configure and enable.
--- Use the lspconfig/vim.lsp.config names, not necessarily the Mason names.
-local servers = {
-    'clangd',
-    'cmake',
-    'cssls',
-    'eslint',
-    'gopls',
-    'hoon_ls', -- Hoon LSP might need a specific setup if not standard
-    'html',
-    'htmx',
-    'lua_ls',
-    'pylsp',
-    'rust_analyzer',
-    'tsserver',
+-- popup menu behaviour
+vim.cmd [[
+  set completeopt+=menuone,noselect,popup
+]]
+
+local lspconfig    = require("lspconfig")
+local cmp_cap      = require("cmp_nvim_lsp").default_capabilities()
+local servers      = {
+  "clangd","cmake","cssls","eslint","gopls","hoon_ls",
+  "html","htmx","lua_ls","pylsp","rust_analyzer","ts_ls",
 }
 
--- Default capabilities for all language servers.
--- This tells the server what features Neovim supports (e.g., inlay hints, folding range).
-local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- Common on_attach for _all_ servers: enable vim.lsp.completion
+local function common_on_attach(client, bufnr)
+  vim.lsp.completion.enable(true, client.id, bufnr, {
+    autotrigger = true,
+    convert = function(item)
+      -- strip any "(…)" suffix from the label
+      return { abbr = item.label:gsub("%b()", "") }
+    end,
+  })
 
--- You can enhance capabilities if you use plugins like 'cmp-nvim-lsp'
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
-if cmp_nvim_lsp then
-    capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+  -- possible to set up keymaps, formatting on save, etc. here
 end
 
--- Loop through each server and configure it
-for _, server in ipairs(servers) do
-    -- Start with a base configuration for the current server
-    local server_config = {
-        capabilities = capabilities,
-        flags = {
-            debounce_text_changes = 150, -- Debounce notifications to the server
+--  Loop and configure each server
+for _, name in ipairs(servers) do
+  local cfg = {
+    capabilities = cmp_cap,
+    flags        = { debounce_text_changes = 150 },
+    on_attach    = common_on_attach,
+  }
+
+  -- per‐server tweaks:
+  if name == "pylsp" then
+    cfg.filetypes   = { "python" }
+    cfg.root_dir    = lspconfig.util.root_pattern(
+                        "pyproject.toml",
+                        "setup.py",
+                        "requirements.txt",
+                        ".git"
+                      )
+    cfg.settings    = {
+      pylsp = {
+        plugins = {
+          pycodestyle = { enabled = true },
+          pylint      = { enabled = true },
         },
-        -- If you want a common on_attach for all servers, put it here:
-        -- on_attach = function(client, bufnr)
-        --     -- Example: Automatically format on save (requires specific formatter settings)
-        --     vim.api.nvim_create_autocmd('BufWritePre', {
-        --         group = vim.api.nvim_create_augroup('FormatOnSave', { clear = true }),
-        --         buffer = bufnr,
-        --         callback = function() vim.lsp.buf.format({ bufnr = bufnr }) end,
-        --     })
-        -- end,
+      },
     }
+  elseif name == "ts_ls" then
+    cfg.cmd       = { "typescript-language-server", "--stdio" }
+    cfg.filetypes = {
+      "javascript","typescript","javascriptreact",
+      "typescriptreact","vue","json",
+    }
+    cfg.root_dir  = lspconfig.util.root_pattern(
+                     "package.json",
+                     "tsconfig.json",
+                     ".git"
+                   )
+    cfg.init_options = { provideFormatter = true }
+  end
 
-    -- Specific configurations for certain language servers
-    if server == 'lua_ls' then
-        -- Lua LS often needs specific root markers beyond just .git
-        server_config.filetypes = { 'lua' } -- explicitly set, though usually defaulted
-        server_config.root_markers = {
-            '.luarc.json', '.luarc.jsonc', '.luacheckrc', '.stylua.toml',
-            'stylua.toml', 'selene.toml', 'selene.yml', '.git',
-        }
-        server_config.settings = {
-            Lua = {
-                runtime = { version = 'LuaJIT' },
-                diagnostics = { globals = { 'vim', 'it', 'describe', 'before_each', 'after_each' } }, -- Add common test globals
-                workspace = { checkThirdParty = false },
-                telemetry = { enable = false },
-            },
-        }
-    elseif server == 'pylsp' then
-        -- Python LSP has good defaults for filetypes and root_markers.
-        -- We might add settings for specific plugins (e.g., pylint, black).
-        server_config.filetypes = { 'python' }
-        server_config.root_markers = { '.git', 'main.py' }
-        server_config.settings = {
-            pylsp = {
-                plugins = {
-                    pycodestyle = { enabled = true },
-                    pylint = { enabled = true },
-                    -- black = { enabled = true }, -- Uncomment if you have black installed
-                    -- autopep8 = { enabled = false },
-                    -- yapf = { enabled = false },
-                },
-            },
-        }
-    elseif server == 'tsserver' then
-        server_config.cmd = { 'typescript-language-server', '--stdio' }
-        -- Tsserver typically handles JS/TS/JSX/TSX well.
-        -- Often used with root_markers like package.json, tsconfig.json.
-        server_config.filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact', 'vue', 'json' }
-        server_config.root_markers = { 'package.json', 'tsconfig.json', '.git' }
-        -- If you use specific TS plugins (like for Vue or Svelte)
-        server_config.init_options = {
-            provideFormatter = true,
-            plugins = {
-                -- { name = "@vue/typescript-plugin" }, -- Example for Vue support
-            },
-        }
-    elseif server == 'rust_analyzer' then
-        -- rust_analyzer also has very good defaults.
-        -- Custom settings are often for inlay hints or specific features.
-        server_config.settings = {
-            ['rust-analyzer'] = {
-                inlayHints = {
-                    typeHints = true,
-                    parameterHints = true,
-                    chainingHints = true,
-                    closureCaptureHints = true,
-                    lifetimeElisionHints = true,
-                    rangeExclusiveHints = true,
-                },
-                checkOnSave = {
-                    command = "clippy", -- Use clippy on save
-                },
-            },
-        }
-    elseif server == 'clangd' then
-        -- Clangd needs compile_commands.json, often generated by CMake.
-        server_config.root_markers = { 'compile_commands.json', '.git' }
-        -- You might pass custom arguments to clangd here, e.g., for specific includes.
-        -- server_config.cmd = { "clangd", "--background-index", "--compile-commands-dir=build" }
-    elseif server == 'htmx' then
-        -- htmx-lsp often applies to HTML-like files, confirm its default filetypes.
-        -- It might default to just 'html', but if you use it in other templating languages, specify them.
-        server_config.filetypes = { 'html', 'htmldjango', 'djangohtml', 'php' } -- Example: if it also works in Django/PHP HTML
-        server_config.root_markers = { 'package.json', '.git' }
-    -- elseif server == 'hoon_ls' then
-    --     -- Hoon is quite niche, you might need to find its specific root_markers and settings.
-    --     -- This is an example, likely not correct without knowing Hoon setup:
-    --     server_config.filetypes = { 'hoon' }
-    --     server_config.root_markers = { '.urbit', 'desk.d', '.git' }
-    end
-
-    -- Assign the compiled config to vim.lsp.config for the server
-    vim.lsp.config[server] = server_config
-
-    -- Enable the server globally to autostart
-    vim.lsp.enable(server)
+  -- tell lspconfig to actually set it up:
+  lspconfig[name].setup(cfg)
 end
