@@ -80,28 +80,31 @@ vim.o.shellredir = '| Out-File -Encoding UTF8 %s'
 -- but if I want to open the netrw in Dropbox folder per default I override the possibility
 -- to open a specific text file passed in via cmd line.
 -- -------------
--- Check if something is a file
-local function is_file(filename)
-  local file = io.open(filename, "r")
-  print("file: " .. filename)
+local uv = vim.loop
 
-  if file then
-    file:close()
-    return true
-  else
-    return false
-  end
+-- Check if something is a file
+local function is_file(path)
+  local st = uv.fs_stat(path)
+  return st and st.type == "file"
+end
+local function is_dir(path)
+  local st = uv.fs_stat(path)
+  return st and st.type == "directory"
 end
 
-
-local open_filename = false
+local open_target = false
 -- parse neovim's argv
 for k, v in pairs(vim.v.argv) do
     if k == 3 then
+        local escpath = vim.fn.fnameescape(v)
         if is_file(v) then
-            print("trying to open " .. v)
+            print("trying to open " .. escpath)
             vim.cmd("e " .. v)
-            open_filename = true
+            open_target = true
+        elseif is_dir(v) then
+            print("trying to list " .. escpath)
+            vim.cmd("silent! Explore " .. escpath)
+            open_target = true
         else
         end
     end
@@ -109,7 +112,7 @@ end
 
 -- at startup: open Dropbox
 -- if we did not pass in a file name
-if not open_filename then
+if not open_target then
     config.Default_startup()
 end
 -- end of stupid hack

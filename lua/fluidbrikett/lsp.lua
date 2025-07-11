@@ -1,3 +1,9 @@
+-- disable the built‐in “Lua Diagnostics” source entirely
+local ns_id = vim.api.nvim_get_namespaces()["Lua Diagnostics"]
+if ns_id then
+  vim.diagnostic.disable(nil, ns_id)
+end
+
 -- popup menu behaviour
 vim.cmd [[
   set completeopt+=menuone,noselect,popup
@@ -48,6 +54,26 @@ for _, name in ipairs(servers) do
         },
       },
     }
+  elseif name == "lua_ls" then
+      cfg.settings = {
+          Lua = {
+              diagnostics = {
+                  -- recognize vim as global variable
+                  globals = { 'vim' },
+              },
+              runtime = {
+                -- tell the server which Lua version you're using (most Neovim configs use LuaJIT)
+                version = "LuaJIT",
+                -- make sure your runtime path is discoverable
+                path = vim.split(package.path, ";"),
+              },
+              workspace = {
+                -- make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file("", true),
+              },
+              telemetry = { enable = false },
+            }
+      }
   elseif name == "ts_ls" then
     cfg.cmd       = { "typescript-language-server", "--stdio" }
     cfg.filetypes = {
