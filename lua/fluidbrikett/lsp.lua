@@ -13,7 +13,7 @@ local lspconfig    = require("lspconfig")
 local cmp_cap      = require("cmp_nvim_lsp").default_capabilities()
 local servers      = {
   "clangd","cmake","cssls","eslint","gopls","hoon_ls",
-  "html","htmx","lua_ls","pylsp","rust_analyzer","ts_ls",
+  "html","htmx","jdtls","lua_ls","pylsp","rust_analyzer","ts_ls",
 }
 
 -- Common on_attach for _all_ servers: enable vim.lsp.completion
@@ -86,6 +86,39 @@ for _, name in ipairs(servers) do
                      ".git"
                    )
     cfg.init_options = { provideFormatter = true }
+  elseif name == "jdtls" then
+    -- Java language server (jdtls)
+    local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+    local workspace_dir = vim.fn.stdpath("data")
+                      .. "/jdtls-workspace/"
+                      .. project_name
+    local java21_home = "/usr/lib/jvm/temurin-21-jdk-amd64"
+    cfg.cmd_env = {
+      -- point jdtls at Java 21
+      JAVA_HOME = java21_home,
+      -- ensure its bin is first on PATH
+      PATH      = java21_home .. "/bin:" .. os.getenv("PATH"),
+    }
+
+    cfg.cmd = {
+      "jdtls",
+      "-data", workspace_dir,
+    }
+    cfg.filetypes = { "java" }
+    cfg.root_dir  = lspconfig.util.root_pattern(
+                     ".git", "mvnw", "gradlew",
+                     "pom.xml", "build.gradle"
+                   )
+    cfg.init_options = {
+      bundles = {},  -- add extra eclipse.jdt.ls bundles here if needed
+    }
+    cfg.settings = {
+      java = {
+        -- example settings; tweak to your preference:
+        signatureHelp = { enabled = true },
+        format = { enabled = true },
+      },
+    }
   end
 
   -- tell lspconfig to actually set it up:
