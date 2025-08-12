@@ -33,7 +33,7 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 --if text is pasted over selected text, keep the pasted text in the buffer
 vim.keymap.set("x", "<leader>p", [["_dP]])
 -- system clipboard for convenience
-vim.keymap.set({ "n", "v" }, "<leader>p", [["+p]])
+vim.keymap.set({ "n", "v" }, "<leader>p", "\"+p']")
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
 vim.keymap.set({ "n", "v" }, "<leader>d", [["+d]])
 -- Y  is synonym to yy, which yanks a complete line (resp. N lines)
