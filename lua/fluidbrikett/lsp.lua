@@ -13,7 +13,7 @@ local lspconfig    = require("lspconfig")
 local cmp_cap      = require("cmp_nvim_lsp").default_capabilities()
 local servers      = {
   "clangd","cmake","cssls","eslint","gopls","hoon_ls",
-  "html","htmx","jdtls","lua_ls","pylsp","rust_analyzer","ts_ls",
+  "html","htmx","jdtls","lua_ls","ruff","rust_analyzer","ts_ls",
 }
 
 -- Common on_attach for _all_ servers: enable vim.lsp.completion
@@ -38,7 +38,7 @@ for _, name in ipairs(servers) do
   }
 
   -- per‐server tweaks:
-  if name == "pylsp" then
+  if name == "ruff" then
     cfg.filetypes   = { "python" }
     cfg.root_dir    = lspconfig.util.root_pattern(
                         "pyproject.toml",
@@ -46,14 +46,6 @@ for _, name in ipairs(servers) do
                         "requirements.txt",
                         ".git"
                       )
-    cfg.settings    = {
-      pylsp = {
-        plugins = {
-          pycodestyle = { enabled = true },
-          pylint      = { enabled = true },
-        },
-      },
-    }
   elseif name == "lua_ls" then
       cfg.settings = {
           Lua = {
