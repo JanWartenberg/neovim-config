@@ -68,9 +68,21 @@ vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 -- Show LSP hover, which should show the docstring of an element
 vim.keymap.set("n", "<leader>ee", vim.lsp.buf.hover)
 vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
--- jump to next lsp error
-vim.keymap.set("n", "<leader>ä", vim.diagnostic.goto_next)
-vim.keymap.set("n", "<leader>ö", vim.diagnostic.goto_prev)
+-- jump to next (resp. prev) lsp error
+local function goto_next_with_float()
+    vim.diagnostic.jump({ count = 1 })
+    vim.schedule(function()
+        vim.diagnostic.open_float(nil, {focus = false})
+    end)
+end
+local function goto_prev_with_float()
+    vim.diagnostic.jump({ count = -1 })
+    vim.schedule(function()
+        vim.diagnostic.open_float(nil, {focus = false})
+    end)
+end
+vim.keymap.set("n", "<leader>ä", goto_next_with_float, { desc = "Next diagnostic + float" })
+vim.keymap.set("n", "<leader>ö", goto_prev_with_float, { desc = "Prev diagnostic + float" })
 
 -- up and down in quickfix list
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
