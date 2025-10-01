@@ -46,6 +46,14 @@ for _, name in ipairs(servers) do
                         "requirements.txt",
                         ".git"
                       )
+    cfg.settings = {
+        pylsp = {
+          plugins = {
+            pycodestyle = { maxLineLength = 88 },
+            flake8 = { maxLineLength = 88 },
+          },
+        },
+    }
   elseif name == "lua_ls" then
       cfg.settings = {
           Lua = {
