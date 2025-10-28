@@ -61,6 +61,8 @@ vim.keymap.set('n', 'grn', vim.lsp.buf.rename)
 vim.keymap.set('n', 'gra', vim.lsp.buf.code_action)
 vim.keymap.set('n', 'grr', vim.lsp.buf.references)
 vim.keymap.set('n', 'grd', Get_current_diagnostic_message)
+-- note: this command could be distinguished by severity if wanted
+vim.keymap.set('n', 'grq', vim.diagnostic.setqflist)
 vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
 -- Show LSP diagnostic (i.e. Warning/Errors) in floating window 
 -- (in case message is cropped in small window)
