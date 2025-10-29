@@ -13,7 +13,7 @@ local lspconfig    = require("lspconfig")
 local cmp_cap      = require("cmp_nvim_lsp").default_capabilities()
 local servers      = {
   "clangd","cmake","cssls","eslint","gopls","hoon_ls",
-  "html","htmx","jdtls","lua_ls","pylsp","rust_analyzer","ts_ls",
+  "html","htmx","jdtls","lua_ls","pylsp","ruff","rust_analyzer","ts_ls",
 }
 
 -- Common on_attach for _all_ servers: enable vim.lsp.completion
@@ -54,6 +54,11 @@ for _, name in ipairs(servers) do
           },
         },
     }
+  elseif name == "ruff" then
+      cfg.capabilities = cmp_cap
+      cfg.on_attach = function(client, _)
+          client.server_capabilities.documentFormattingProvide = true
+      end
   elseif name == "lua_ls" then
       cfg.settings = {
           Lua = {
