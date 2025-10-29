@@ -63,8 +63,6 @@ vim.keymap.set('n', 'grr', vim.lsp.buf.references)
 vim.keymap.set('n', 'grd', Get_current_diagnostic_message)
 -- note: this command could be distinguished by severity if wanted
 vim.keymap.set('n', 'grq', vim.diagnostic.setqflist)
--- vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
-vim.keymap.set("n", "<leader>fo", function() vim.lsp.buf.format({ name = "ruff" }) end)
 -- Show LSP diagnostic (i.e. Warning/Errors) in floating window 
 -- (in case message is cropped in small window)
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
@@ -86,6 +84,19 @@ local function goto_prev_with_float()
 end
 vim.keymap.set("n", "<leader>ä", goto_next_with_float, { desc = "Next diagnostic + float" })
 vim.keymap.set("n", "<leader>ö", goto_prev_with_float, { desc = "Prev diagnostic + float" })
+
+vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
+vim.api.nvim_create_autocmd("Filetype", {
+    pattern = "python",
+    callback = function(args)
+      vim.keymap.set("n", "<leader>fo", function()
+        vim.lsp.buf.format({
+          async = true,
+          filter = function(c) return c.name == "ruff" end,
+        })
+      end, { buffer = args.buf, desc = "Format Python with Ruff" })
+    end,
+})
 
 -- up and down in quickfix list
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
