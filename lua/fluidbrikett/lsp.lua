@@ -1,78 +1,74 @@
 local cmp_cap = require("cmp_nvim_lsp").default_capabilities()
 cmp_cap.offsetEncoding = { "utf-16" }
 
-local util = require("lspconfig.util")
-
-local servers = {
-  "clangd", "cmake", "gopls",
-  -- "jdtls",   -- fix later
-  "lua_ls", "pylsp", 
-  -- "ruff",    -- only use as formatter, keep it installed via Mason
-  "ts_ls",
+local list = { 'jdtls', 'lua_ls', 'pylsp', 'ts_ls'
+    -- 'jdtls',   -- fix later
+    -- 'ruff',    -- only use as formatter, keep it installed via Mason
+    -- TODO 'clangd', 'cmake', 'gopls',
 }
 
-local function common_on_attach(client, bufnr)
-  vim.lsp.completion.enable(true, client.id, bufnr, {
-    autotrigger = true,
-    convert = function(item)
-      return { abbr = item.label:gsub("%b()", "") }
-    end,
-  })
-end
+vim.lsp.config['jdtls'] = {
+    cmd = {'jdtls', '-data', vim.fn.stdpath('data') .. '/jdtls-workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')},
+    filetypes = { 'java' },
+    root_markers = { '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' },
+    settings = {
+      java = {
+        signatureHelp = { enabled = true },
+        format = { enabled = true },
+      },
+    }
+}
 
-for _, name in ipairs(servers) do
-  local cfg = {
+vim.lsp.config['lua_ls'] = {
+    cmd = { 'lua-language-server' },
+    filetypes = { 'lua' },
+    root_markers = { { '.luarc.json', '.luarc.jsonc' }, '.git' },
+    settings = {
+        Lua = {
+            format = { defaultConfig = { max_line_length = "100" } },
+            runtime = { version = 'LuaJIT' },
+            workspace = { library = vim.api.nvim_get_runtime_file('', true) },
+            diagnostics = { globals = { 'vim' } },
+            telemetry = { enable = false },
+        },
+    },
+}
+
+vim.lsp.config['pylsp'] = {
+    cmd = { 'pylsp' },
+    filetypes = { 'python' },
+    root_markers = { 'pyproject.toml', '.git', 'requirements.txt', 'setup.py' },
+    settings = {
+        pylsp = {
+            plugins = {
+                flake8 = { maxLineLength = 88 },
+                pycodestyle = { maxLineLength = 88 },
+            },
+        },
+    },
+}
+
+vim.lsp.config['ts_ls'] = {
+    cmd = { 'typescript-language-server', '--stdio' },
+    filetypes = { 'javascript', 'typescript',
+      'javascriptreact', 'typescriptreact',
+      'vue', 'json',
+    },
+    root_markers = { 'package.json', 'tsconfig.json', '.git' }
+}
+
+
+local common_cfg = {
     capabilities = cmp_cap,
     flags = { debounce_text_changes = 150 },
-    on_attach = common_on_attach,
-  }
+    -- on_attach = common_on_attach,
+}
 
-  -- per‑server settings
-  if name == "pylsp" then
-    cfg.filetypes = { "python" }
-    cfg.root_dir = util.root_pattern(
-      "pyproject.toml", "setup.py", "requirements.txt", ".git"
-    )
-    cfg.settings = {
-      pylsp = {
-        plugins = {
-          pycodestyle = { maxLineLength = 88 },
-          flake8 = { maxLineLength = 88 },
-        },
-      },
-    }
-  elseif name == "lua_ls" then
-    cfg.cmd = { "lua-language-server" }
-    cfg.settings = {
-      Lua = {
-        diagnostics = { globals = { "vim" } },
-        runtime = { version = "LuaJIT", path = vim.split(package.path, ";") },
-        workspace = { library = vim.api.nvim_get_runtime_file("", true) },
-        telemetry = { enable = false },
-      },
-    }
-  elseif name == "ts_ls" then
-    cfg.cmd = { "typescript-language-server", "--stdio" }
-    cfg.filetypes = {
-      "javascript", "typescript",
-      "javascriptreact", "typescriptreact",
-      "vue", "json",
-    }
-    cfg.root_dir = util.root_pattern("package.json", "tsconfig.json", ".git")
-  elseif name == "jdtls" then
-    local project = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-    cfg.cmd = {
-      "jdtls",
-      "-data",
-      vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project,
-    }
-    cfg.root_dir = util.root_pattern(
-      ".git", "mvnw", "gradlew", "pom.xml", "build.gradle"
-    )
-  end
+-- Enable everything that has been configured
+for _, name in ipairs(list) do
+    local cfg = vim.lsp.config[name] or {}
+    -- merge common + existing: later tables override earlier keys
+    vim.lsp.config[name] = vim.tbl_deep_extend('force', cfg, common_cfg)
 
-  local ok, err = pcall(vim.lsp.config, name, cfg)
-  if not ok then
-    vim.notify(("Cannot configure %s: %s"):format(name, err), vim.log.levels.ERROR)
-  end
+    vim.lsp.enable(name)
 end
