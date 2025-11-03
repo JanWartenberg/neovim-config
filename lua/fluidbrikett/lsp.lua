@@ -4,9 +4,11 @@ cmp_cap.offsetEncoding = { "utf-16" }
 local util = require("lspconfig.util")
 
 local servers = {
-  "clangd", "cmake", "cssls", "eslint", "gopls", "hoon_ls",
-  "html", "htmx", "jdtls", "lua_ls", "pylsp", "ruff",
-  "rust_analyzer", "ts_ls",
+  "clangd", "cmake", "gopls",
+  -- "jdtls",   -- fix later
+  "lua_ls", "pylsp", 
+  -- "ruff",    -- only use as formatter, keep it installed via Mason
+  "ts_ls",
 }
 
 local function common_on_attach(client, bufnr)
@@ -40,6 +42,7 @@ for _, name in ipairs(servers) do
       },
     }
   elseif name == "lua_ls" then
+    cfg.cmd = { "lua-language-server" }
     cfg.settings = {
       Lua = {
         diagnostics = { globals = { "vim" } },

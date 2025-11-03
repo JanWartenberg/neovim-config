@@ -46,8 +46,50 @@ elseif environment == Config.ENVS.BM_WSL then
     -- path to python (python env including pynim)
     --vim.g.python3_host_prog = vim.g.homedir .. ''
 
+
+    -- explicit start of LSPs right now only needed for 0.11.5 on WSL
     Config.Default_startup = function()
-        print("No Default startup for BM WSL.")
+      -- check, if Configs are defined
+      local ok, cfg_tbl = pcall(function()
+        return vim.lsp.config._configs or {}
+      end)
+      if not ok or not cfg_tbl then
+        vim.notify("No LSP configs registered yet", vim.log.levels.WARN)
+        return
+      end
+
+      local util_ok, util = pcall(require, "lspconfig.util")
+      if not util_ok then
+        vim.notify("lspconfig.util missing", vim.log.levels.ERROR)
+        return
+      end
+
+      for name, cfg in pairs(cfg_tbl) do
+        -- skip already‑running servers
+        local running = vim.iter(vim.lsp.get_clients()):any(function(c)
+          return c.name == name
+        end)
+        if running then
+          goto continue
+        end
+
+        local root = (cfg.root_dir and cfg.root_dir(vim.fn.getcwd()))
+          or util.root_pattern(".git")(vim.fn.getcwd())
+
+        vim.notify(("Starting %s (manual WSL start)"):format(name))
+        vim.lsp.start({
+          name = name,
+          cmd = (cfg.cmd and cfg.cmd[1]) and cfg.cmd or { name },
+          root_dir = root,
+          filetypes = cfg.filetypes,
+          capabilities = cfg.capabilities,
+          settings = cfg.settings,
+          flags = cfg.flags,
+          on_attach = cfg.on_attach,
+        })
+
+        ::continue::
+      end
     end
 elseif environment == Config.ENVS.DOCKER then
     vim.g.homedir= '~'
