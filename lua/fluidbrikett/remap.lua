@@ -9,8 +9,8 @@ vim.g.mapleader = " "
 
 -- open same file again (split vertically) and scroll down
 -- instead of a wild guess, now take window size into account
-vim.keymap.set("n", "<leader>ss", function ()
-    local winheight = vim.fn.winheight(vim.fn.winnr())  - M.scrolloff
+vim.keymap.set("n", "<leader>ss", function()
+    local winheight = vim.fn.winheight(vim.fn.winnr()) - M.scrolloff
     local command = string.format("<C-w>v<C-w>w%d<C-e>", winheight)
     command = vim.api.nvim_replace_termcodes(command, false, false, true)
     vim.api.nvim_feedkeys(command, "n", false)
@@ -63,7 +63,7 @@ vim.keymap.set('n', 'grr', vim.lsp.buf.references)
 vim.keymap.set('n', 'grd', Get_current_diagnostic_message)
 -- note: this command could be distinguished by severity if wanted
 vim.keymap.set('n', 'grq', vim.diagnostic.setqflist)
--- Show LSP diagnostic (i.e. Warning/Errors) in floating window 
+-- Show LSP diagnostic (i.e. Warning/Errors) in floating window
 -- (in case message is cropped in small window)
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
 -- Show LSP hover, which should show the docstring of an element
@@ -73,13 +73,13 @@ vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
 local function goto_next_with_float()
     vim.diagnostic.jump({ count = 1 })
     vim.schedule(function()
-        vim.diagnostic.open_float(nil, {focus = false})
+        vim.diagnostic.open_float(nil, { focus = false })
     end)
 end
 local function goto_prev_with_float()
     vim.diagnostic.jump({ count = -1 })
     vim.schedule(function()
-        vim.diagnostic.open_float(nil, {focus = false})
+        vim.diagnostic.open_float(nil, { focus = false })
     end)
 end
 vim.keymap.set("n", "<leader>ä", goto_next_with_float, { desc = "Next diagnostic + float" })
@@ -89,19 +89,35 @@ vim.keymap.set("n", "<leader>fo", vim.lsp.buf.format)
 vim.api.nvim_create_autocmd("Filetype", {
     pattern = "python",
     callback = function(args)
-      vim.keymap.set("n", "<leader>fo", function()
-        vim.lsp.buf.format({
-          async = true,
-          filter = function(c) return c.name == "ruff" end,
-        })
-      end, { buffer = args.buf, desc = "Format Python with Ruff" })
+        vim.keymap.set("n", "<leader>fo", function()
+            vim.cmd.write()
+            vim.fn.system({ "ruff", "format", vim.api.nvim_buf_get_name(args.buf) })
+            vim.cmd.edit({ bang = true })
+        end, { buffer = args.buf, desc = "Format Python with Ruff" })
     end,
+})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "json",
+  callback = function(args)
+    vim.keymap.set("n", "<leader>fo", function()
+      -- Run Prettier through stdin/stdout pipeline
+      local input = table.concat(vim.api.nvim_buf_get_lines(args.buf, 0, -1, false), "\n")
+      local formatted = vim.fn.systemlist({ "prettier", "--parser", "json" }, input)
+
+      if vim.v.shell_error == 0 then
+        vim.api.nvim_buf_set_lines(args.buf, 0, -1, false, formatted)
+        print("Prettier formatted current buffer")
+      else
+        print("Prettier failed: " .. table.concat(formatted, "\n"))
+      end
+    end, { buffer = args.buf, desc = "Format JSON with Prettier" })
+  end,
 })
 
 -- up and down in quickfix list
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>q", "<cmd>cclose<CR>zz")  -- close quicklist pane
+vim.keymap.set("n", "<leader>q", "<cmd>cclose<CR>zz") -- close quicklist pane
 -- up and down in location list
 vim.keymap.set("n", "<leader>j", "<cmd>lnext<CR>zz")
 vim.keymap.set("n", "<leader>k", "<cmd>lprev<CR>zz")
@@ -127,10 +143,11 @@ vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><
 vim.keymap.set("v", "<leader>s", [[:s/\%V<C-r><C-w>\%V/<C-r><C-w>/gI<Left><Left><Left>]])
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
-vim.keymap.set({"n", "v"}, "<leader>h", "<cmd>nohlsearch<CR>")
+vim.keymap.set({ "n", "v" }, "<leader>h", "<cmd>nohlsearch<CR>")
 
 -- FloaTerm configuration
-vim.keymap.set('n', "<leader>ft", ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=0 <CR>")
+vim.keymap.set('n', "<leader>ft",
+    ":FloatermNew --name=myfloat --height=0.8 --width=0.7 --autoclose=0 <CR>")
 vim.keymap.set('n', "<leader>fn", ":FloatermNext <CR>")
 vim.keymap.set('t', "<leader>fn", "<C-\\><C-n>:FloatermNext <CR>")
 vim.keymap.set('t', "<leader>fp", "<C-\\><C-n>:FloatermPrev <CR>")
