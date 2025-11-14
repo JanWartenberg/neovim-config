@@ -20,9 +20,11 @@ vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost" }, {
     --vim.fn.matchadd("TodoGlobal", "\\<TODO\\>")
     --vim.fn.matchadd("NoteGlobal", "\\<NOTE\\>")
     vim.fn.matchadd("NoteGlobal", "^.*\\<NOTE\\>.*$")
+    vim.fn.matchadd("DebugGlobal", "^.*\\<DEBUG\\>.*$")
 
     vim.api.nvim_set_hl(0, "TodoGlobal", boldblue)
     vim.api.nvim_set_hl(0, "NoteGlobal", lightblue)
+    vim.api.nvim_set_hl(0, "DebugGlobal", lightblue)
   end,
 })
 
