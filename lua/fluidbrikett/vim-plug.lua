@@ -10,10 +10,9 @@ local plugdir = config.path_join(vim.g.Nvimconfig, "plugged")
 
 vim.call('plug#begin', plugdir)
 Plug('nvim-lua/plenary.nvim')
-Plug('nvim-telescope/telescope.nvim', { tag = '0.1.5' })
+Plug('nvim-telescope/telescope.nvim')
 Plug('nvim-treesitter/nvim-treesitter')
 Plug('nvim-treesitter/playground')
-Plug('tree-sitter/tree-sitter-rust')
 
 Plug('mbbill/undotree')
 Plug('tpope/vim-fugitive')
@@ -25,7 +24,6 @@ Plug('williamboman/mason-lspconfig.nvim') -- Optional
 -- Autocompletion
 Plug('hrsh7th/nvim-cmp')     -- Required
 Plug('hrsh7th/cmp-nvim-lsp') -- Required
-Plug('L3MON4D3/LuaSnip')     -- Required
 
 Plug('zbirenbaum/copilot.lua')
 Plug('olimorris/codecompanion.nvim')
