@@ -59,7 +59,6 @@ elseif environment == Config.ENVS.DOCKER then
     end
 else
     -- else: ENVS.PRIVATE in our case
-    require("my_plugins.test_lsp.lua.load_test_lsp")
     vim.g.homedir = 'C:\\Users\\janwa'
     vim.g.Source = "D:\\Docs\\Code"
     vim.g.Nvimconfig = vim.g.homedir .. "\\Appdata\\Local\\nvim"
