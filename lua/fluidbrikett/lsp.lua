@@ -1,12 +1,21 @@
 local cmp_cap = require("cmp_nvim_lsp").default_capabilities()
 cmp_cap.offsetEncoding = { "utf-16" }
 
-local list = { 'jdtls', 'lua_ls', 'pylsp', 'ts_ls'
+local list = { 'clangd', 'jdtls', 'lua_ls', 'pylsp', 'ts_ls'
     -- 'jdtls',   -- fix later
     -- 'ruff',    -- only use as formatter, keep it installed via Mason
-    -- TODO 'clangd', 'cmake', 'gopls',
+    -- TODO 'cmake', 'gopls',
 }
 
+vim.lsp.config['clangd'] = {
+  cmd = { 'clangd', '--background-index', '--clang-tidy' },
+  filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+  init_options = {
+    fallbackFlags = { '-D_CRT_SECURE_NO_WARNINGS' },
+  },
+  root_markers = { 'compile_commands.json', '.git' },
+  settings = {},
+}
 vim.lsp.config['jdtls'] = {
     cmd = {'jdtls', '-data', vim.fn.stdpath('data') .. '/jdtls-workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')},
     filetypes = { 'java' },
