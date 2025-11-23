@@ -10,7 +10,7 @@ local plugdir = config.path_join(vim.g.Nvimconfig, "plugged")
 
 vim.call('plug#begin', plugdir)
 Plug('nvim-lua/plenary.nvim')
-Plug('nvim-telescope/telescope.nvim')
+Plug('nvim-telescope/telescope.nvim', { tag = 'v0.1.9' })
 Plug('nvim-treesitter/nvim-treesitter')
 Plug('nvim-treesitter/playground')
 
