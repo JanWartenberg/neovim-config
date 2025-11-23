@@ -27,6 +27,9 @@ Plug('hrsh7th/nvim-cmp')     -- Required
 Plug('hrsh7th/cmp-nvim-lsp') -- Required
 Plug('L3MON4D3/LuaSnip')     -- Required
 
+Plug('zbirenbaum/copilot.lua')
+Plug('olimorris/codecompanion.nvim')
+
 Plug('voldikss/vim-floaterm')
 
 -- show structure of a file?
