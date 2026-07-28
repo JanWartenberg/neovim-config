@@ -8,23 +8,23 @@ local list = { 'clangd', 'jdtls', 'lua_ls', 'pylsp', 'ts_ls'
 }
 
 vim.lsp.config['clangd'] = {
-  cmd = { 'clangd', '--background-index', '--clang-tidy' },
-  filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
-  init_options = {
-    fallbackFlags = { '-D_CRT_SECURE_NO_WARNINGS' },
-  },
-  root_markers = { 'compile_commands.json', '.git' },
-  settings = {},
+    cmd = { 'clangd', '--background-index', '--clang-tidy' },
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp' },
+    init_options = {
+        fallbackFlags = { '-D_CRT_SECURE_NO_WARNINGS' },
+    },
+    root_markers = { 'compile_commands.json', '.git' },
+    settings = {},
 }
 vim.lsp.config['jdtls'] = {
-    cmd = {'jdtls', '-data', vim.fn.stdpath('data') .. '/jdtls-workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')},
+    cmd = { 'jdtls', '-data', vim.fn.stdpath('data') .. '/jdtls-workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t') },
     filetypes = { 'java' },
     root_markers = { '.git', 'mvnw', 'gradlew', 'pom.xml', 'build.gradle' },
     settings = {
-      java = {
-        signatureHelp = { enabled = true },
-        format = { enabled = true },
-      },
+        java = {
+            signatureHelp = { enabled = true },
+            format = { enabled = true },
+        },
     }
 }
 
@@ -50,9 +50,10 @@ vim.lsp.config['pylsp'] = {
     settings = {
         pylsp = {
             plugins = {
-                flake8 = { maxLineLength = 88 },
-                pycodestyle = { maxLineLength = 88 },
-            },
+                flake8 = { enabled = false },
+                pyflakes = { enabled = false },
+                pycodestyle = { enabled = false },
+            }
         },
     },
 }
@@ -60,8 +61,8 @@ vim.lsp.config['pylsp'] = {
 vim.lsp.config['ts_ls'] = {
     cmd = { 'typescript-language-server', '--stdio' },
     filetypes = { 'javascript', 'typescript',
-      'javascriptreact', 'typescriptreact',
-      'vue', 'json',
+        'javascriptreact', 'typescriptreact',
+        'vue', 'json',
     },
     root_markers = { 'package.json', 'tsconfig.json', '.git' }
 }

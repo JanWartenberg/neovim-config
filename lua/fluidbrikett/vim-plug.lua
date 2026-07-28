@@ -10,7 +10,7 @@ local plugdir = config.path_join(vim.g.Nvimconfig, "plugged")
 
 vim.call('plug#begin', plugdir)
 Plug('nvim-lua/plenary.nvim')
-Plug('nvim-telescope/telescope.nvim', { tag = 'v0.1.9' })
+Plug('nvim-telescope/telescope.nvim')
 -- `master` is the legacy implementation for Neovim 0.11. Neovim 0.12 needs
 -- the rewritten plugin on `main`.
 Plug('nvim-treesitter/nvim-treesitter', { branch = 'main', ['do'] = ':TSUpdate' })
