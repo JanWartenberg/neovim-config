@@ -3,7 +3,6 @@ cmp_cap.offsetEncoding = { "utf-16" }
 
 local list = { 'clangd', 'jdtls', 'lua_ls', 'pylsp', 'ts_ls'
     -- 'jdtls',   -- fix later
-    -- 'ruff',    -- only use as formatter, keep it installed via Mason
     -- TODO 'cmake', 'gopls',
 }
 
@@ -50,6 +49,7 @@ vim.lsp.config['pylsp'] = {
     settings = {
         pylsp = {
             plugins = {
+                ruff = { enabled = true },
                 flake8 = { enabled = false },
                 pyflakes = { enabled = false },
                 pycodestyle = { enabled = false },
